@@ -1,3 +1,5 @@
+# CogniSmart: A smat cognitive assessment system based on the N-back task.
+
 ### Sensors Used
 1. Muse Headset.
 2. Intel Realsense sensor
