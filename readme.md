@@ -13,12 +13,15 @@ If you saw the same letter three trials ago, you press a button provided accordi
 For example if you saw the letters A,B,L,T,B,C. You press a button when you see the letter B a second time since it 
 appeard exactly 3 turns after it first appeared. 
 <p>
+In this application, we have implemented an N-back application with a visual stimuli and audio stimulti. The practitioners
+can choose which stimulti they wish to use. The application has a total of 4 rounds, two rounds of the 0-back task and 
+two rounds of 2-back task. Two rounds of each task is always presented together and the order of 0-back and 2-back will 
+be counterbalanced amoung subjects. Each task has a total of 65 trials per round 16 of which are targets.
+<p>
 In our task, based on the implementation of the n-back task by PsyToolkit, the stimulti appears on the screen for 
 2 seconds and a new stimuli is presented after 500 ms of each stimuli.
-<p>
-The game has a total of 4 rounds, two rounds of the 0-back task and two rounds of 2-back task. Two rounds of each
-task were always presented together and the order of 0-back and 2-back were counterbalanced amoung subjects. 
-The task has a total of 65 trials per round 16 of which are targets.
+
+
 
 [1] Stoet, G. (2010). PsyToolkit - A software package for programming psychological experiments using Linux. Behavior Research Methods, 42(4), 1096-1104. <br> 
 [2] Stoet, G. (2017). PsyToolkit: A novel web-based method for running online questionnaires and reaction-time experiments. Teaching of Psychology, 44(1), 24-31. 
