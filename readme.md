@@ -5,7 +5,7 @@
 2. Intel Realsense sensor
 
 ### N-Back Working Memory Task
-According to psytoolkit [1,2], N-Back working memory task is a task where you will see a sequence
+According to psytoolkit [1,2,3], N-Back working memory task is a task where you will see a sequence
 of letters. Each letter is shown for a few seconds. You need to decide if you saw the same letter 3 trials ago, that is,
 this is a n=3-back task.
 <p>
@@ -22,3 +22,4 @@ The task has a total of 65 trials per round 16 of which are targets.
 
 [1] Stoet, G. (2010). PsyToolkit - A software package for programming psychological experiments using Linux. Behavior Research Methods, 42(4), 1096-1104. <br> 
 [2] Stoet, G. (2017). PsyToolkit: A novel web-based method for running online questionnaires and reaction-time experiments. Teaching of Psychology, 44(1), 24-31. 
+[3] Jaeggi, S.M., Buschkuehl, M., Perrig, W.J., & Meier, B. (2010). The concurrent validity of the N-back task as a working memory measure. Memory, 18, , 394–412
