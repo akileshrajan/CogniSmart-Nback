@@ -1,14 +1,5 @@
 # CogniSmart: A smat cognitive assessment system based on the N-back task.
 
-### Sensors Used
-1. Muse Headset.
-2. Intel Realsense sensor
-
-### Dependencies
-1. Kivy Python Cross-Platform Gui library 1.9.0 or newer
-2. Install Python SDK Tools: http://das.nasophon.de/pyliblo/ 
-
-Note: Since we use 64-bit Linux OS, check the following link for MuseSDK on 64-bit system: http://forum.choosemuse.com/t/issues-running-muselab-and-muse-io/112/20 or https://github.com/elnn/tomato/blob/master/README.md
 ### N-Back Working Memory Task
 According to psytoolkit [1,2,3], N-Back working memory task is a task where you will see a sequence
 of letters. Each letter is shown for a few seconds. You need to decide if you saw the same letter 3 trials ago, that is,
@@ -30,6 +21,17 @@ require working memory but requires sustained attention [4].
 #### 2-Back Task
 In this task, the target is the symbol that appeared two trials back. The participants are required to press a button on
 the keyboard when they think they saw the symbol.
+
+### Sensors Used
+1. Muse Headset.
+2. Intel Realsense sensor
+
+### Dependencies
+1. Kivy Python Cross-Platform Gui library 1.9.0 or newer
+2. Install Python SDK Tools: http://das.nasophon.de/pyliblo/ 
+
+Note: Since we use 64-bit Linux OS, check the following link for MuseSDK on 64-bit system: http://forum.choosemuse.com/t/issues-running-muselab-and-muse-io/112/20 or https://github.com/elnn/tomato/blob/master/README.md
+
 
 ### References
 [1] Stoet, G. (2010). PsyToolkit - A software package for programming psychological experiments using Linux. Behavior Research Methods, 42(4), 1096-1104. <br> 
