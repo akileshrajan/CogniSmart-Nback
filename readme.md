@@ -25,6 +25,8 @@ the keyboard when they think they saw the symbol.
 ### Sensors Used
 1. Muse Headset.
 2. Intel Realsense sensor
+3. Fitbit Smart watches and Fitbit trackers.
+4. BioSignal Plux - ECG sensor.
 
 ### Dependencies
 1. Kivy Python Cross-Platform Gui library 1.9.0 or newer
