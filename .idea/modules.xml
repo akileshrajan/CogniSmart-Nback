@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/fatigue_fitbit.iml" filepath="$PROJECT_DIR$/.idea/fatigue_fitbit.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../CogBeacon-WCST_interface-master/.idea/wisconsin_unimodal.iml" filepath="$PROJECT_DIR$/../CogBeacon-WCST_interface-master/.idea/wisconsin_unimodal.iml" />
     </modules>
   </component>
 </project>
