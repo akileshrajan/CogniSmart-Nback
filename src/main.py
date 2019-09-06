@@ -7,15 +7,16 @@ from functools import partial
 import numpy as np
 import cv2
 import sys,os
-import _pickle as cPickle
+# import _pickle as cPickle
 from threading import Thread
 import datetime
 from kivy.config import Config
 import keyboard
 kivy.require('1.9.0')
 
-# from levels import main_game,original_game
-import src.MUSE_Server as mps
+import MUSE_Server as mps
+# from .MUSE_Server import MuseServer as mps
+# import MUSE_Server as mps
 
 
 def readMuse(path):
@@ -67,7 +68,16 @@ def readFrames(path):
 
 # Initialize variables
 class NbackGame(FloatLayout):
+    def __init(self, **kwargs):
+        super(NbackGame, self).__init__(**kwargs)
 
+        global round_set, round_id, modality
+        round_set = 0
+
+        self.trial = 0
+        round_id = self.trial
+
+        self.total_trials = 64
 
 class NbackApp(App):
     def build(self):
@@ -85,7 +95,7 @@ def main(game,user_id,stimuli,data_path):
     :return: No return value.
     """
 
-    global User_ID, email, modality, round_set, round_id, quit, game_type, store_data_path
+    global User_ID, email, modality, round_set, round_id, quit,  store_data_path
     Config.set('graphics', 'width', str(1000))
     Config.set('graphics', 'height', str(1000))
 

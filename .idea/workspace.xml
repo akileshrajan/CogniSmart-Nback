@@ -2,9 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="b2fc5896-0918-4279-ac41-b54bcbe29199" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/fatigue_fitbit.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/fatigue_fitbit.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/AppData/correct_sound.wav" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/AppData/wrong_sound.wav" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/MUSE_Server.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/MUSE_Server.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -29,8 +31,11 @@
     <option name="height" value="1204" />
   </component>
   <component name="ProjectId" id="1QL4PVK9WCEYI7usrJXZckMiRH9" />
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="PropertiesComponent">
+    <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="settings.editor.selected.configurable" value="editor.preferences.fonts.default" />
@@ -119,12 +124,28 @@
       <option name="project" value="LOCAL" />
       <updated>1565722351495</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="added application files">
+      <created>1567646822420</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1567646822420</updated>
+    </task>
+    <task id="LOCAL-00006" summary="added application files">
+      <created>1567646894210</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1567646894210</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
+    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
     <MESSAGE value="Added helper functions in main.py" />
     <MESSAGE value="updated readme" />
-    <option name="LAST_COMMIT_MESSAGE" value="updated readme" />
+    <MESSAGE value="added application files" />
+    <option name="LAST_COMMIT_MESSAGE" value="added application files" />
   </component>
 </project>

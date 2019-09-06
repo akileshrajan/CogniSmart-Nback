@@ -146,8 +146,8 @@ def initialize(f):
     except KeyboardInterrupt:
         print ("End of program: Caught KeyboardInterrupt")
         sys.exit()
-    except ServerError, err:
-        print str(err)
+    except ServerError as err:
+        print (str(err))
         sys.exit()
 
 
