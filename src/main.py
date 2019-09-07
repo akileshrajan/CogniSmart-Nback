@@ -1,6 +1,8 @@
 import kivy
 from kivy.app import App
 from kivy.uix.floatlayout import FloatLayout
+from kivy.uix.button import Button
+from kivy.lang import Builder
 from kivy.core.audio import SoundLoader
 from kivy.clock import Clock
 from functools import partial
@@ -17,6 +19,9 @@ kivy.require('1.9.0')
 import MUSE_Server as mps
 # from .MUSE_Server import MuseServer as mps
 # import MUSE_Server as mps
+
+# Load the kivy file
+presentation = Builder.load_file("NbackGame.kv")
 
 
 def readMuse(path):
@@ -68,7 +73,7 @@ def readFrames(path):
 
 # Initialize variables
 class NbackGame(FloatLayout):
-    def __init(self, **kwargs):
+    def __init__(self, **kwargs):
         super(NbackGame, self).__init__(**kwargs)
 
         global round_set, round_id, modality
@@ -78,6 +83,11 @@ class NbackGame(FloatLayout):
         round_id = self.trial
 
         self.total_trials = 64
+        self.levels = [0,2]
+        # self.build()
+
+    # def check_result(self):
+
 
 class NbackApp(App):
     def build(self):
@@ -95,8 +105,8 @@ def main(game,user_id,stimuli,data_path):
     :return: No return value.
     """
 
-    global User_ID, email, modality, round_set, round_id, quit,  store_data_path
-    Config.set('graphics', 'width', str(1000))
+    global User_ID, email, modality, round_set, round_id, quit, store_data_path
+    Config.set('graphics', 'width', str(1500))
     Config.set('graphics', 'height', str(1000))
 
     # Parameter initialization
@@ -106,13 +116,13 @@ def main(game,user_id,stimuli,data_path):
     quit = False
 
     # Create path to store images if not there
-    path_im = store_data_path+ '/images/'
+    path_im = os.path.join(store_data_path,'images')
     if not os.path.exists(path_im):
         os.makedirs(path_im)
         path_im = os.path.abspath(path_im)
 
     # Create path to store eeg if not there
-    path_eeg = store_data_path + '/eeg/'
+    path_eeg = os.path.join(store_data_path , 'eeg')
     if not os.path.exists(path_eeg):
         os.makedirs(path_eeg)
         path_eeg = os.path.abspath(path_eeg)
@@ -120,10 +130,13 @@ def main(game,user_id,stimuli,data_path):
     user_folder_name = "user_"+user_id+"_"+stimuli
     User_ID = user_id
 
-    path_im = path_im + user_folder_name
+    path_im = os.path.join(path_im, user_folder_name)
+    print(path_im)
     if not os.path.exists(path_im):
         os.makedirs(path_im)
-    path_eeg = path_eeg + user_folder_name
+
+    path_eeg = os.path.join(path_eeg, user_folder_name)
+    print(path_eeg)
     if not os.path.exists(path_eeg):
         os.makedirs(path_eeg)
 
@@ -131,15 +144,15 @@ def main(game,user_id,stimuli,data_path):
     thread1 = Thread(target=NbackApp().run)
     thread1.start()
 
-    thread2 = Thread(target=readFrames, args=(path_im,))
-    thread2.start()
-
-    thread3 = Thread(target=readMuse, args=(path_eeg,))
-    thread3.start()
+    # thread2 = Thread(target=readFrames, args=(path_im,))
+    # thread2.start()
+    #
+    # thread3 = Thread(target=readMuse, args=(path_eeg,))
+    # thread3.start()
 
     thread1.join()
-    thread2.join()
-    thread3.join()
+    # thread2.join()
+    # thread3.join()
 
 
 if __name__ == '__main__':
