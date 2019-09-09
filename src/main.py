@@ -83,12 +83,10 @@ class NbackGame(FloatLayout):
         round_id = self.trial
 
         self.total_trials = 64
-        self.levels = [0,2]
+
         # self.build()
 
     # def check_result(self):
-
-
 class NbackApp(App):
     def build(self):
         return NbackGame()
