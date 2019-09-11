@@ -1,0 +1,38 @@
+# File name: main.py
+#:kivy 1.11.1
+
+<NbackMain>
+    GridLayout:
+        cols: 1
+        Label:
+            text:'The N-Back Cognitive Assessment'
+            font_size: 50
+            bold: True
+
+        Button:
+            id: start_btn
+            text: "Click here to start the game"
+            font_size: 40
+            color:0,1,0,1
+
+            on_release:
+                root.start_game()
+
+<NbackGame>
+    canvas:
+        Rectangle:
+            pos: self.center_x-200, self.center_y-160
+            size: 400,320
+
+    Image:
+        id: instruction
+        pos_hint: {"x":self.center_x-200,"y":self.center_y-160}
+        size_hint: 195,160
+
+    BoxLayout:
+        Label:
+            id: timer
+            text: str(5)
+            bold: True
+            font_size: 150
+            color:0,0,0,1

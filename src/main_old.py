@@ -1,16 +1,22 @@
 import kivy
 from kivy.app import App
 from kivy.uix.floatlayout import FloatLayout
+from kivy.uix.button import Button
 from kivy.lang import Builder
 from kivy.core.audio import SoundLoader
 from kivy.clock import Clock
+from functools import partial
 from kivy.uix.label import Label
-from kivy.uix.screenmanager import ScreenManager, Screen, SlideTransition
-from kivy.config import Config
-
+from kivy.animation import Animation
+from kivy.properties import NumericProperty
 import numpy as np
-import cv2, sys,os, datetime
+import cv2
+import sys,os
+# import _pickle as cPickle
 from threading import Thread
+import datetime
+from kivy.config import Config
+import keyboard
 kivy.require('1.9.0')
 
 import MUSE_Server as mps
@@ -18,7 +24,7 @@ import MUSE_Server as mps
 # import MUSE_Server as mps
 
 # Load the kivy file
-Builder.load_file("main.kv")
+presentation = Builder.load_file("main.kv")
 
 def readMuse(path):
     global server,round_set,user_id, round_id, quit
@@ -68,37 +74,37 @@ def readFrames(path):
 
 
 # Initialize variables
-class NbackMain(Screen):
-    def start_game(self):
-        # game = nbackGame()
-        # global timer
-        # timer = Clock.schedule_interval(game.timercallback, 1)
-        self.manager.transition = SlideTransition(direction="left")
-        self.manager.current = 'game_screen'
-        self.manager.get_screen('game_screen').start_game()
+class NbackGame(FloatLayout):
+    def __init__(self, **kwargs):
+        super(NbackGame, self).__init__(**kwargs)
+
+        global round_set, round_id, modality
+
+        round_set = 0
+
+        self.trial = 0
+        round_id = self.trial
+
+        self.total_trials = 64
 
 
-class NbackGame(Screen):
-    def start_game(self):
-        self.timer = None
-        self.timer = Clock.schedule_interval(self.timercallback, 1)
+        # self.build()
+        #self.start_app()
 
-    def timercallback(self, val):
-        global timer_val, timer
-        timer_val -= 1
-        # print(timer_val)
-        self.ids['timer'].text = str(timer_val)
-        if timer_val == 0:
-            self.ids['timer'].text = ''
+    # def check_result(self):
+    def btn0_onclick(self):
+        self.timer = Clock.schedule_interval(self.my_callback, 1)
+
+    def timer_callback(self):
+        global t
+        t -= 1
+        self.ids['timer'].text = str(t)
+        if t == 0:
             self.timer.cancel()
 
 class NbackApp(App):
     def build(self):
-        screen_mgr = ScreenManager()
-        screen_mgr.add_widget(NbackMain(name='main_screen'))
-        screen_mgr.add_widget(NbackGame(name='game_screen'))
-
-        return screen_mgr
+        return NbackGame()
 
 
 def main(game,user_id,stimuli,data_path):
@@ -112,7 +118,7 @@ def main(game,user_id,stimuli,data_path):
     :return: No return value.
     """
 
-    global User_ID, email, modality, round_set, round_id, quit, store_data_path, timer_val
+    global User_ID, email, modality, round_set, round_id, quit, store_data_path
 
     Config.set('graphics', 'width', str(1500))
     Config.set('graphics', 'height', str(1000))
@@ -122,7 +128,7 @@ def main(game,user_id,stimuli,data_path):
     game_type = game
     round_set = 0
     quit = False
-    timer_val = 5
+
     # Create path to store images if not there
     path_im = os.path.join(store_data_path,'images')
     if not os.path.exists(path_im):
@@ -149,7 +155,7 @@ def main(game,user_id,stimuli,data_path):
         os.makedirs(path_eeg)
 
     # Run game and recording into threads
-    thread1 = Thread(target=NbackApp().run())
+    thread1 = Thread(target=NbackApp().run)
     thread1.start()
 
     # thread2 = Thread(target=readFrames, args=(path_im,))
