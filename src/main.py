@@ -81,7 +81,7 @@ class NbackMain(Screen):
 class NbackGame(Screen):
     def start_game(self):
         self.timer = None
-        self.timer = Clock.schedule_interval(self.timercallback, 1)
+        self.timer = Clock.schedule_interval(self.timercallback, 2.5)
 
     def timercallback(self, val):
         global timer_val, timer
@@ -91,6 +91,9 @@ class NbackGame(Screen):
         if timer_val == 0:
             self.ids['timer'].text = ''
             self.timer.cancel()
+
+    # def generate_block(self):
+
 
 class NbackApp(App):
     def build(self):
@@ -139,12 +142,10 @@ def main(game,user_id,stimuli,data_path):
     User_ID = user_id
 
     path_im = os.path.join(path_im, user_folder_name)
-    print(path_im)
     if not os.path.exists(path_im):
         os.makedirs(path_im)
 
     path_eeg = os.path.join(path_eeg, user_folder_name)
-    print(path_eeg)
     if not os.path.exists(path_eeg):
         os.makedirs(path_eeg)
 
