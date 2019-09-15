@@ -19,7 +19,7 @@ import MUSE_Server as mps
 
 # Load the kivy file
 Builder.load_file("main.kv")
-
+Clock.max_iteration = 70
 def readMuse(path):
     global server,round_set,user_id, round_id, quit
     intro = open('test', 'w')
@@ -81,7 +81,7 @@ class NbackMain(Screen):
 class NbackGame(Screen):
     def start_game(self):
         self.timer = None
-        self.timer = Clock.schedule_interval(self.timercallback, 2.5)
+        self.timer = Clock.schedule_interval(self.timercallback, 1)
 
     def timercallback(self, val):
         global timer_val, timer
@@ -91,8 +91,16 @@ class NbackGame(Screen):
         if timer_val == 0:
             self.ids['timer'].text = ''
             self.timer.cancel()
+            self.generate_block()
 
-    # def generate_block(self):
+    def generate_block(self):
+        global game_type
+
+        if game_type == 0:
+            self.ids["instruction"].source = "../AppData/Nback_visual/0-back_inst.png"
+            print ("0-back")
+        elif game_type == 2:
+            self.ids["instruction"].source = "../AppData/Nback_visual/2-back_inst.png"
 
 
 class NbackApp(App):
@@ -115,7 +123,7 @@ def main(game,user_id,stimuli,data_path):
     :return: No return value.
     """
 
-    global User_ID, email, modality, round_set, round_id, quit, store_data_path, timer_val
+    global User_ID, modality, round_id, quit, store_data_path, timer_val, game_type
 
     Config.set('graphics', 'width', str(1500))
     Config.set('graphics', 'height', str(1000))
@@ -165,4 +173,4 @@ def main(game,user_id,stimuli,data_path):
 
 
 if __name__ == '__main__':
-   main('m','test_user','v','/media/akilesh/data/fatigue_fitbit')
+   main(2,'test_user','v','/media/akilesh/data/fatigue_fitbit')

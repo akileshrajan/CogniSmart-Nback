@@ -2,136 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="b2fc5896-0918-4279-ac41-b54bcbe29199" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/AppData/Nback_visual/0_blank.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/AppData/Nback_visual/10_brown_cross.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/AppData/Nback_visual/11_brown_diamond.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/AppData/Nback_visual/12_brown_heart.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/AppData/Nback_visual/13_brown_moon.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/AppData/Nback_visual/14_brown_octagon.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/AppData/Nback_visual/15_brown_trapezoid.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/AppData/Nback_visual/16_brown_triangle.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/AppData/Nback_visual/17_cyan_circle.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/AppData/Nback_visual/18_cyan_cross.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/AppData/Nback_visual/19_cyan_diamond.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/AppData/Nback_visual/1_blue_circle.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/AppData/Nback_visual/20_cyan_heart.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/AppData/Nback_visual/21_cyan_moon.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/AppData/Nback_visual/22_cyan_octagon.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/AppData/Nback_visual/23_cyan_trapezoid.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/AppData/Nback_visual/24_cyan_triangle.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/AppData/Nback_visual/25_green_circle.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/AppData/Nback_visual/26_green_cross.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/AppData/Nback_visual/27_green_diamond.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/AppData/Nback_visual/28_green_heart.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/AppData/Nback_visual/29_green_moon.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/AppData/Nback_visual/2_blue_cross.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/AppData/Nback_visual/30_green_octagon.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/AppData/Nback_visual/31_green_trapezoid.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/AppData/Nback_visual/32_green_triangle.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/AppData/Nback_visual/33_magenta_circle.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/AppData/Nback_visual/34_magenta_cross.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/AppData/Nback_visual/35_magenta_diamond.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/AppData/Nback_visual/36_magenta_heart.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/AppData/Nback_visual/37_magenta_moon.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/AppData/Nback_visual/38_magenta_octagon.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/AppData/Nback_visual/39_magenta_trapezoid.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/AppData/Nback_visual/3_blue_diamond.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/AppData/Nback_visual/40_magenta_triangle.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/AppData/Nback_visual/41_pink_circle.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/AppData/Nback_visual/42_pink_cross.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/AppData/Nback_visual/43_pink_diamond.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/AppData/Nback_visual/44_pink_heart.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/AppData/Nback_visual/45_pink_moon.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/AppData/Nback_visual/46_pink_octagon.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/AppData/Nback_visual/47_pink_trapezoid.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/AppData/Nback_visual/48_pink_triangle.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/AppData/Nback_visual/49_red_circle.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/AppData/Nback_visual/4_blue_heart.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/AppData/Nback_visual/50_red_cross.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/AppData/Nback_visual/51_red_diamond.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/AppData/Nback_visual/52_red_heart.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/AppData/Nback_visual/53_red_moon.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/AppData/Nback_visual/54_red_octagon.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/AppData/Nback_visual/55_red_trapezoid.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/AppData/Nback_visual/56_red_triangle.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/AppData/Nback_visual/57_yellow_circle.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/AppData/Nback_visual/58_yellow_cross.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/AppData/Nback_visual/59_yellow_diamond.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/AppData/Nback_visual/5_blue_moon.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/AppData/Nback_visual/60_yellow_heart.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/AppData/Nback_visual/61_yellow_moon.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/AppData/Nback_visual/62_yellow_octagon.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/AppData/Nback_visual/63_yellow_trapezoid.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/AppData/Nback_visual/64_yellow_triangle.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/AppData/Nback_visual/6_blue_octagon.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/AppData/Nback_visual/7_blue_trapezoid.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/AppData/Nback_visual/8_blue_triangle.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/AppData/Nback_visual/9_brown_circle.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/AppData/Nback_visual/0-back_inst.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/AppData/Nback_visual/2-back_inst.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/AppData/Nback_visual/blue_circle.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/AppData/Nback_visual/blue_cross.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/AppData/Nback_visual/blue_diamond.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/AppData/Nback_visual/blue_heart.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/AppData/Nback_visual/blue_moon.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/AppData/Nback_visual/blue_octagon.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/AppData/Nback_visual/blue_trapezoid.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/AppData/Nback_visual/blue_triangle.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/AppData/Nback_visual/brown_circle.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/AppData/Nback_visual/brown_cross.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/AppData/Nback_visual/brown_diamond.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/AppData/Nback_visual/brown_heart.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/AppData/Nback_visual/brown_moon.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/AppData/Nback_visual/brown_octagon.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/AppData/Nback_visual/brown_trapezoid.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/AppData/Nback_visual/brown_triangle.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/AppData/Nback_visual/cyan_circle.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/AppData/Nback_visual/cyan_cross.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/AppData/Nback_visual/cyan_diamond.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/AppData/Nback_visual/cyan_heart.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/AppData/Nback_visual/cyan_moon.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/AppData/Nback_visual/cyan_octagon.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/AppData/Nback_visual/cyan_trapezoid.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/AppData/Nback_visual/cyan_triangle.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/AppData/Nback_visual/green_circle.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/AppData/Nback_visual/green_cross.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/AppData/Nback_visual/green_diamond.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/AppData/Nback_visual/green_heart.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/AppData/Nback_visual/green_moon.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/AppData/Nback_visual/green_octagon.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/AppData/Nback_visual/green_trapezoid.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/AppData/Nback_visual/green_triangle.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/AppData/Nback_visual/magenta_circle.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/AppData/Nback_visual/magenta_cross.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/AppData/Nback_visual/magenta_diamond.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/AppData/Nback_visual/magenta_heart.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/AppData/Nback_visual/magenta_moon.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/AppData/Nback_visual/magenta_octagon.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/AppData/Nback_visual/magenta_trapezoid.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/AppData/Nback_visual/magenta_triangle.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/AppData/Nback_visual/pink_circle.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/AppData/Nback_visual/pink_cross.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/AppData/Nback_visual/pink_diamond.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/AppData/Nback_visual/pink_heart.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/AppData/Nback_visual/pink_moon.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/AppData/Nback_visual/pink_octagon.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/AppData/Nback_visual/pink_trapezoid.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/AppData/Nback_visual/pink_triangle.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/AppData/Nback_visual/red_circle.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/AppData/Nback_visual/red_cross.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/AppData/Nback_visual/red_diamond.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/AppData/Nback_visual/red_heart.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/AppData/Nback_visual/red_moon.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/AppData/Nback_visual/red_octagon.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/AppData/Nback_visual/red_trapezoid.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/AppData/Nback_visual/red_triangle.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/AppData/Nback_visual/yellow_circle.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/AppData/Nback_visual/yellow_cross.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/AppData/Nback_visual/yellow_diamond.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/AppData/Nback_visual/yellow_heart.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/AppData/Nback_visual/yellow_moon.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/AppData/Nback_visual/yellow_octagon.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/AppData/Nback_visual/yellow_trapezoid.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/AppData/Nback_visual/yellow_triangle.png" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main.kv" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.kv" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.py" afterDir="false" />
     </list>
@@ -140,6 +13,9 @@
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FavoritesManager">
+    <favorites_list name="CogniSmart-Nback" />
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -334,7 +210,14 @@
       <option name="project" value="LOCAL" />
       <updated>1568243502970</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="minor changes">
+      <created>1568327430747</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1568327430747</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -358,6 +241,7 @@
     <MESSAGE value="added .kv file and other app data changes" />
     <MESSAGE value="modified .kv file" />
     <MESSAGE value="Added welcome screen. Added timer on game start" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added welcome screen. Added timer on game start" />
+    <MESSAGE value="minor changes" />
+    <option name="LAST_COMMIT_MESSAGE" value="minor changes" />
   </component>
 </project>
