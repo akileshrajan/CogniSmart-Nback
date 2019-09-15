@@ -134,6 +134,8 @@ def main(game,user_id,stimuli,data_path):
     round_set = 0
     quit = False
     timer_val = 5
+    User_ID = str(user_id)
+
     # Create path to store images if not there
     path_im = os.path.join(store_data_path,'images')
     if not os.path.exists(path_im):
@@ -146,8 +148,8 @@ def main(game,user_id,stimuli,data_path):
         os.makedirs(path_eeg)
         path_eeg = os.path.abspath(path_eeg)
 
-    user_folder_name = "user_"+user_id+"_"+stimuli
-    User_ID = user_id
+    user_folder_name = "user_"+User_ID+"_"+stimuli
+
 
     path_im = os.path.join(path_im, user_folder_name)
     if not os.path.exists(path_im):
@@ -173,4 +175,5 @@ def main(game,user_id,stimuli,data_path):
 
 
 if __name__ == '__main__':
-   main(2,'test_user','v','/media/akilesh/data/fatigue_fitbit')
+   # main(2,'test_user','v','/media/akilesh/data/fatigue_fitbit')
+   main(0,0,'v','~/data/')
