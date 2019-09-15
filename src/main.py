@@ -134,6 +134,7 @@ def main(game,user_id,stimuli,block_id, data_path):
 
     #defining global variables for application
     global User_ID, modality, Block_Id, quit, store_data_path, timer_val, game_type
+    global total_stimuli    # Total number of stimuli being presented to the user
     global correct_press    # Total number of times the user pressed the space bar for the correct target
     global correct_miss     # Total number of times the user missed the space-bar for the correct non-target
     global total_false      # Total number of times the user pressed the space-bar for the incorrect target
@@ -149,7 +150,7 @@ def main(game,user_id,stimuli,block_id, data_path):
     # Parameter initialization
     store_data_path =data_path
     game_type = game
-    round_set = 0
+    total_stimuli = 64
     Block_Id = block_id
     quit = False
     timer_val = 5
