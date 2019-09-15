@@ -91,16 +91,16 @@ class NbackGame(Screen):
         if timer_val == 0:
             self.ids['timer'].text = ''
             self.timer.cancel()
-            self.generate_block()
+            self.generate_instruction()
 
-    def generate_block(self):
+    def generate_instruction(self):
         global game_type
 
         if game_type == 0:
-            self.ids["instruction"].source = "../AppData/Nback_visual/0-back_inst.png"
-            print ("0-back")
+            self.ids["instruction"].source = "../AppData/Nback_visual/inst_0-back.png"
+            # print ("0-back")
         elif game_type == 2:
-            self.ids["instruction"].source = "../AppData/Nback_visual/2-back_inst.png"
+            self.ids["instruction"].source = "../AppData/Nback_visual/inst_2-back.png"
 
 
 class NbackApp(App):
