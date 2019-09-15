@@ -98,9 +98,18 @@ class NbackGame(Screen):
 
         if game_type == 0:
             self.ids["instruction"].source = "../AppData/Nback_visual/inst_0-back.png"
+            self.generate_0back_seq(game_type)
             # print ("0-back")
         elif game_type == 2:
             self.ids["instruction"].source = "../AppData/Nback_visual/inst_2-back.png"
+            self.generate_2back_seq(game_type)
+
+    def generate_0back_seq(self, g_type):
+        # Take the entire list of 64 images and show it randomly. Will have 8 targets.
+        pass
+
+    def generate_2back_seq(self,g_type):
+        pass
 
 
 class NbackApp(App):
@@ -112,7 +121,7 @@ class NbackApp(App):
         return screen_mgr
 
 
-def main(game,user_id,stimuli,data_path):
+def main(game,user_id,stimuli,block_id, data_path):
     """
     This is the main function of the game. The starting point.
 
@@ -123,7 +132,16 @@ def main(game,user_id,stimuli,data_path):
     :return: No return value.
     """
 
-    global User_ID, modality, round_id, quit, store_data_path, timer_val, game_type
+    #defining global variables for application
+    global User_ID, modality, Block_Id, quit, store_data_path, timer_val, game_type
+    global correct_press    # Total number of times the user pressed the space bar for the correct target
+    global correct_miss     # Total number of times the user missed the space-bar for the correct non-target
+    global total_false      # Total number of times the user pressed the space-bar for the incorrect target
+    global incorrect_miss   # Total number of times the user missed the space-bar for the correct target
+    global score            # Overall percentage of correct hits and miss.
+    global corrects_acc     # Percent of correct hits
+    global incorrects_acc   # Percent of incorrect hits out of non-target.
+    global reaction_time    # Reaction time for each stimuli
 
     Config.set('graphics', 'width', str(1500))
     Config.set('graphics', 'height', str(1000))
@@ -132,6 +150,7 @@ def main(game,user_id,stimuli,data_path):
     store_data_path =data_path
     game_type = game
     round_set = 0
+    Block_Id = block_id
     quit = False
     timer_val = 5
     User_ID = str(user_id)
@@ -175,5 +194,5 @@ def main(game,user_id,stimuli,data_path):
 
 
 if __name__ == '__main__':
-   # main(2,'test_user','v','/media/akilesh/data/fatigue_fitbit')
-   main(0,0,'v','~/data/')
+   # main(2,'test_user','v',1,'/media/akilesh/data/fatigue_fitbit')
+   main(0,0,'v',1,'~/data/')
