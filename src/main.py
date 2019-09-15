@@ -155,6 +155,8 @@ def main(game,user_id,stimuli,block_id, data_path):
     quit = False
     timer_val = 5
     User_ID = str(user_id)
+    correct_press, correct_miss, total_false, incorrect_miss = 0,0,0,0
+
 
     # Create path to store images if not there
     path_im = os.path.join(store_data_path,'images')
