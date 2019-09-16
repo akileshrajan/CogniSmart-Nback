@@ -122,9 +122,16 @@ class NbackGame(Screen,FloatLayout):
         self.inst_path = "../AppData/Nback_visual/" # Location of the list of files we display as instructions
         self.re_pattern = '[0-9]+_'                 # Regex to read only the instruction files.
         self.inst_files = []                        # List of files that we display for instructions
+        global total_stimuli
+        self.stimuli_id = total_stimuli -1
+
+        self.timer = None                           # timer event scheduler
+        self.back_0_scheduler= None                 # 0-back event scheduler
+        self.back_2_scheduler = None                # 2_back event scheduler
+        self.blank_scheduler = None                 # blank image event scheduler
 
     def start_game(self):
-        self.timer = None
+
         self.timer = Clock.schedule_interval(self.timercallback, 1)
 
     def timercallback(self, val):
@@ -143,27 +150,35 @@ class NbackGame(Screen,FloatLayout):
         # print("Block ID", Block_Id, "Game type", game_type)
 
         self.inst_files = [item for item in os.listdir(self. inst_path) if re.match(self.re_pattern, item)]
+        np.random.shuffle(self.inst_files)
 
         if game_type == 0:
             self.ids["instruction"].source = "../AppData/Nback_visual/inst_0-back.png"
             self.ids["instruction"].opacity = 1
             Clock.schedule_once(self.generate_0back_seq,5)
-            # self.generate_0back_seq(game_type)
-            # print ("0-back")
+
         elif game_type == 2:
             self.ids["instruction"].source = "../AppData/Nback_visual/inst_2-back.png"
             self.ids["instruction"].opacity = 1
             Clock.schedule_once(self.generate_2back_seq,5)
 
-
     def generate_0back_seq(self,_):
         # Take the entire list of 64 images and show it randomly. Will have 8 targets.
-        self.ids["stimuli"].source = os.path.join(self.inst_path+self.inst_files[0])
-        self.ids["stimuli"].opacity = 1
         self.ids["instruction"].opacity = 0
+        self.back_0_scheduler = Clock.schedule_interval(self.set_instructions,2)
+        # self.blank_scheduler = Clock.schedule_interval(self.set_blanks, 2)
 
     def generate_2back_seq(self,_):
         print(_)
+
+    def set_instructions(self,_):
+        print(self.stimuli_id)
+        self.ids["stimuli"].source = os.path.join(self.inst_path + self.inst_files[self.stimuli_id])
+        self.ids["stimuli"].opacity = 1
+        self.stimuli_id -= 1
+        if self.stimuli_id == 0:
+            self.ids["stimuli"].opacity =0
+            self.back_0_scheduler.cancel()
 
 
 class NbackApp(App):
