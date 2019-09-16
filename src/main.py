@@ -70,7 +70,7 @@ def readFrames(path):
 
 
 # Initialize variables
-class NbackMain(Screen):
+class NbackMain(Screen,FloatLayout):
 
     def on_text_change(self, usr_id):
         global User_ID
@@ -116,12 +116,12 @@ class NbackMain(Screen):
         self.manager.get_screen('game_screen').start_game()
 
 
-class NbackGame(Screen):
+class NbackGame(Screen,FloatLayout):
     def __init__(self, **kw):
         super(NbackGame, self).__init__(**kw)
-        self.inst_path = "../AppData/Nback_visual/"
-        self.re_pattern = '[0-9]+_'
-        self.inst_files = []
+        self.inst_path = "../AppData/Nback_visual/" # Location of the list of files we display as instructions
+        self.re_pattern = '[0-9]+_'                 # Regex to read only the instruction files.
+        self.inst_files = []                        # List of files that we display for instructions
 
     def start_game(self):
         self.timer = None
@@ -146,18 +146,21 @@ class NbackGame(Screen):
 
         if game_type == 0:
             self.ids["instruction"].source = "../AppData/Nback_visual/inst_0-back.png"
+            self.ids["instruction"].opacity = 1
             Clock.schedule_once(self.generate_0back_seq,5)
             # self.generate_0back_seq(game_type)
             # print ("0-back")
         elif game_type == 2:
             self.ids["instruction"].source = "../AppData/Nback_visual/inst_2-back.png"
+            self.ids["instruction"].opacity = 1
             Clock.schedule_once(self.generate_2back_seq,5)
 
 
     def generate_0back_seq(self,_):
         # Take the entire list of 64 images and show it randomly. Will have 8 targets.
-        print(_)
-
+        self.ids["stimuli"].source = os.path.join(self.inst_path+self.inst_files[0])
+        self.ids["stimuli"].opacity = 1
+        self.ids["instruction"].opacity = 0
 
     def generate_2back_seq(self,_):
         print(_)
@@ -225,5 +228,5 @@ def main(stimuli, data_path):
 
 
 if __name__ == '__main__':
-   # main('v','/media/akilesh/data/fatigue_fitbit')
-   main('v','/Users/akileshrajavenkatanarayanan/data/')
+   main('v','/media/akilesh/data/fatigue_fitbit')
+   # main('v','/Users/akileshrajavenkatanarayanan/data/')
