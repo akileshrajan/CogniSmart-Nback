@@ -1,5 +1,5 @@
 # File name: main.py
-#:kivy 1.11.1
+#:kivy 1.9.0
 
 <NbackMain>
     GridLayout:
@@ -9,11 +9,44 @@
             font_size: 50
             bold: True
 
+        BoxLayout:
+            size_hint: None,None
+            size: root.width,100
+            pos_hint: {'center': (.5, .5)}
+
+            BoxLayout:
+                padding:0,0,5,0
+
+                TextInput:
+                    id: usr_id
+                    multiline: False
+                    hint_text: 'User ID'
+                    font_size: 50
+                    focus: True
+                    input_filter: 'int'
+                    on_text: root.on_text_change(self.text)
+
+                Spinner:
+                    id: blk_id
+                    text: 'Block ID'
+                    values: '1', '2', '3', '4', 'Practice'
+                    font_size: 50
+                    background_color: 0,0,1,1
+                    on_text: root.on_blkid_change(self.text)
+
+                Spinner:
+                    id: game_type
+                    text: 'Game Type'
+                    values: '0', '2'
+                    font_size: 50
+                    background_color: 0,0,1,1
+                    on_text: root.on_gametype_change(self.text)
         Button:
+            size_hint: 1,0.7
             id: start_btn
             text: "Click here to start the game"
-            font_size: 40
-            color:0,1,0,1
+            font_size: 50
+            background_color:0,1,1,1
 
             on_release:
                 root.start_game()

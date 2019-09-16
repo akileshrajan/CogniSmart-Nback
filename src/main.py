@@ -9,7 +9,7 @@ from kivy.uix.screenmanager import ScreenManager, Screen, SlideTransition
 from kivy.config import Config
 
 import numpy as np
-import cv2, sys,os, datetime
+import cv2, sys,os, datetime, re
 from threading import Thread
 kivy.require('1.9.0')
 
@@ -20,6 +20,8 @@ import MUSE_Server as mps
 # Load the kivy file
 Builder.load_file("main.kv")
 Clock.max_iteration = 70
+
+
 def readMuse(path):
     global server,round_set,user_id, round_id, quit
     intro = open('test', 'w')
@@ -69,16 +71,58 @@ def readFrames(path):
 
 # Initialize variables
 class NbackMain(Screen):
+
+    def on_text_change(self, usr_id):
+        global User_ID
+        User_ID = str(usr_id)
+
+    def on_blkid_change(self, b_id):
+        global Block_Id
+        Block_Id = b_id
+
+    def on_gametype_change(self, g_type):
+        global game_type
+        game_type = int(g_type)
+
     def start_game(self):
         # game = nbackGame()
         # global timer
         # timer = Clock.schedule_interval(game.timercallback, 1)
+        # Create path to store images if not there
+        global User_ID, stimuli_type
+        path_im = os.path.join(store_data_path,'images')
+        if not os.path.exists(path_im):
+            os.makedirs(path_im)
+            path_im = os.path.abspath(path_im)
+
+        # Create path to store eeg if not there
+        path_eeg = os.path.join(store_data_path , 'eeg')
+        if not os.path.exists(path_eeg):
+            os.makedirs(path_eeg)
+            path_eeg = os.path.abspath(path_eeg)
+
+        user_folder_name = "user_"+User_ID+"_"+stimuli_type
+
+        path_im = os.path.join(path_im, user_folder_name)
+        if not os.path.exists(path_im):
+            os.makedirs(path_im)
+
+        path_eeg = os.path.join(path_eeg, user_folder_name)
+        if not os.path.exists(path_eeg):
+            os.makedirs(path_eeg)
+
         self.manager.transition = SlideTransition(direction="left")
         self.manager.current = 'game_screen'
         self.manager.get_screen('game_screen').start_game()
 
 
 class NbackGame(Screen):
+    def __init__(self, **kw):
+        super(NbackGame, self).__init__(**kw)
+        self.inst_path = "../AppData/Nback_visual/"
+        self.re_pattern = '[0-9]+_'
+        self.inst_files = []
+
     def start_game(self):
         self.timer = None
         self.timer = Clock.schedule_interval(self.timercallback, 1)
@@ -91,16 +135,32 @@ class NbackGame(Screen):
         if timer_val == 0:
             self.ids['timer'].text = ''
             self.timer.cancel()
-            self.generate_block()
+            self.generate_instruction()
 
-    def generate_block(self):
-        global game_type
+    def generate_instruction(self):
+        global game_type, Block_Id
+        import numpy as np
+        # print("Block ID", Block_Id, "Game type", game_type)
+
+        self.inst_files = [item for item in os.listdir(self. inst_path) if re.match(self.re_pattern, item)]
 
         if game_type == 0:
-            self.ids["instruction"].source = "../AppData/Nback_visual/0-back_inst.png"
-            print ("0-back")
+            self.ids["instruction"].source = "../AppData/Nback_visual/inst_0-back.png"
+            Clock.schedule_once(self.generate_0back_seq,5)
+            # self.generate_0back_seq(game_type)
+            # print ("0-back")
         elif game_type == 2:
-            self.ids["instruction"].source = "../AppData/Nback_visual/2-back_inst.png"
+            self.ids["instruction"].source = "../AppData/Nback_visual/inst_2-back.png"
+            Clock.schedule_once(self.generate_2back_seq,5)
+
+
+    def generate_0back_seq(self,_):
+        # Take the entire list of 64 images and show it randomly. Will have 8 targets.
+        print(_)
+
+
+    def generate_2back_seq(self,_):
+        print(_)
 
 
 class NbackApp(App):
@@ -112,7 +172,7 @@ class NbackApp(App):
         return screen_mgr
 
 
-def main(game,user_id,stimuli,data_path):
+def main(stimuli, data_path):
     """
     This is the main function of the game. The starting point.
 
@@ -123,39 +183,31 @@ def main(game,user_id,stimuli,data_path):
     :return: No return value.
     """
 
-    global User_ID, modality, round_id, quit, store_data_path, timer_val, game_type
+    #defining global variables for application
+    global User_ID, modality, Block_Id, quit, store_data_path, timer_val, game_type, stimuli_type
+    global total_stimuli    # Total number of stimuli being presented to the user
+    global correct_press    # Total number of times the user pressed the space bar for the correct target
+    global correct_miss     # Total number of times the user missed the space-bar for the correct non-target
+    global total_false      # Total number of times the user pressed the space-bar for the incorrect target
+    global incorrect_miss   # Total number of times the user missed the space-bar for the correct target
+    global score            # Overall percentage of correct hits and miss.
+    global corrects_acc     # Percent of correct hits
+    global incorrects_acc   # Percent of incorrect hits out of non-target.
+    global reaction_time    # Reaction time for each stimuli
 
     Config.set('graphics', 'width', str(1500))
     Config.set('graphics', 'height', str(1000))
 
     # Parameter initialization
     store_data_path =data_path
-    game_type = game
-    round_set = 0
+    # game_type = game
+    total_stimuli = 64
+    # Block_Id = block_id
     quit = False
     timer_val = 5
-    # Create path to store images if not there
-    path_im = os.path.join(store_data_path,'images')
-    if not os.path.exists(path_im):
-        os.makedirs(path_im)
-        path_im = os.path.abspath(path_im)
-
-    # Create path to store eeg if not there
-    path_eeg = os.path.join(store_data_path , 'eeg')
-    if not os.path.exists(path_eeg):
-        os.makedirs(path_eeg)
-        path_eeg = os.path.abspath(path_eeg)
-
-    user_folder_name = "user_"+user_id+"_"+stimuli
-    User_ID = user_id
-
-    path_im = os.path.join(path_im, user_folder_name)
-    if not os.path.exists(path_im):
-        os.makedirs(path_im)
-
-    path_eeg = os.path.join(path_eeg, user_folder_name)
-    if not os.path.exists(path_eeg):
-        os.makedirs(path_eeg)
+    stimuli_type = stimuli
+    # User_ID = str(user_id)
+    correct_press, correct_miss, total_false, incorrect_miss = 0,0,0,0
 
     # Run game and recording into threads
     thread1 = Thread(target=NbackApp().run())
@@ -173,4 +225,5 @@ def main(game,user_id,stimuli,data_path):
 
 
 if __name__ == '__main__':
-   main(2,'test_user','v','/media/akilesh/data/fatigue_fitbit')
+   # main('v','/media/akilesh/data/fatigue_fitbit')
+   main('v','/Users/akileshrajavenkatanarayanan/data/')

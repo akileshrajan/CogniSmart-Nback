@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="b2fc5896-0918-4279-ac41-b54bcbe29199" name="Default Changelist" comment="" />
+    <list default="true" id="b2fc5896-0918-4279-ac41-b54bcbe29199" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/fatigue_fitbit.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/fatigue_fitbit.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.py" afterDir="false" />
+    </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -29,7 +35,7 @@
     <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
-    <property name="settings.editor.selected.configurable" value="editor.preferences.fonts.default" />
+    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
@@ -115,6 +121,11 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <list>
+      <item itemvalue="Python.MUSE_Server" />
+      <item itemvalue="Python.im_resize" />
+      <item itemvalue="Python.main" />
+    </list>
     <recent_temporary>
       <list>
         <item itemvalue="Python.main" />
@@ -211,14 +222,7 @@
       <option name="project" value="LOCAL" />
       <updated>1568327430747</updated>
     </task>
-    <task id="LOCAL-00012" summary="added instructions">
-      <created>1568507225126</created>
-      <option name="number" value="00012" />
-      <option name="presentableId" value="LOCAL-00012" />
-      <option name="project" value="LOCAL" />
-      <updated>1568507225126</updated>
-    </task>
-    <option name="localTasksCounter" value="13" />
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -235,7 +239,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
     <MESSAGE value="Added helper functions in main.py" />
     <MESSAGE value="updated readme" />
     <MESSAGE value="added application files" />
@@ -243,7 +246,8 @@
     <MESSAGE value="modified .kv file" />
     <MESSAGE value="Added welcome screen. Added timer on game start" />
     <MESSAGE value="minor changes" />
-    <MESSAGE value="added instructions" />
-    <option name="LAST_COMMIT_MESSAGE" value="added instructions" />
+    <MESSAGE value="change inst image name." />
+    <MESSAGE value="added task performance params" />
+    <option name="LAST_COMMIT_MESSAGE" value="added task performance params" />
   </component>
 </project>
