@@ -9,7 +9,7 @@ from kivy.uix.screenmanager import ScreenManager, Screen, SlideTransition
 from kivy.config import Config
 
 import numpy as np
-import cv2, sys,os, datetime
+import cv2, sys,os, datetime, re
 from threading import Thread
 kivy.require('1.9.0')
 
@@ -116,8 +116,13 @@ class NbackMain(Screen):
         self.manager.get_screen('game_screen').start_game()
 
 
-
 class NbackGame(Screen):
+    def __init__(self, **kw):
+        super(NbackGame, self).__init__(**kw)
+        self.inst_path = "../AppData/Nback_visual/"
+        self.re_pattern = '[0-9]+_'
+        self.inst_files = []
+
     def start_game(self):
         self.timer = None
         self.timer = Clock.schedule_interval(self.timercallback, 1)
@@ -134,21 +139,28 @@ class NbackGame(Screen):
 
     def generate_instruction(self):
         global game_type, Block_Id
-        print("Block ID", Block_Id, "Game type", game_type)
+        import numpy as np
+        # print("Block ID", Block_Id, "Game type", game_type)
+
+        self.inst_files = [item for item in os.listdir(self. inst_path) if re.match(self.re_pattern, item)]
+
         if game_type == 0:
             self.ids["instruction"].source = "../AppData/Nback_visual/inst_0-back.png"
-            self.generate_0back_seq(game_type)
+            Clock.schedule_once(self.generate_0back_seq,5)
+            # self.generate_0back_seq(game_type)
             # print ("0-back")
         elif game_type == 2:
             self.ids["instruction"].source = "../AppData/Nback_visual/inst_2-back.png"
-            self.generate_2back_seq(game_type)
+            Clock.schedule_once(self.generate_2back_seq,5)
 
-    def generate_0back_seq(self, g_type):
+
+    def generate_0back_seq(self,_):
         # Take the entire list of 64 images and show it randomly. Will have 8 targets.
-        pass
+        print(_)
 
-    def generate_2back_seq(self,g_type):
-        pass
+
+    def generate_2back_seq(self,_):
+        print(_)
 
 
 class NbackApp(App):
