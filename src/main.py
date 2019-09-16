@@ -20,6 +20,8 @@ import MUSE_Server as mps
 # Load the kivy file
 Builder.load_file("main.kv")
 Clock.max_iteration = 70
+
+
 def readMuse(path):
     global server,round_set,user_id, round_id, quit
     intro = open('test', 'w')
@@ -69,13 +71,50 @@ def readFrames(path):
 
 # Initialize variables
 class NbackMain(Screen):
+
+    def on_text_change(self, usr_id):
+        global User_ID
+        User_ID = str(usr_id)
+
+    def on_blkid_change(self, b_id):
+        global Block_Id
+        Block_Id = b_id
+
+    def on_gametype_change(self, g_type):
+        global game_type
+        game_type = int(g_type)
+
     def start_game(self):
         # game = nbackGame()
         # global timer
         # timer = Clock.schedule_interval(game.timercallback, 1)
+        # Create path to store images if not there
+        global User_ID, stimuli_type
+        path_im = os.path.join(store_data_path,'images')
+        if not os.path.exists(path_im):
+            os.makedirs(path_im)
+            path_im = os.path.abspath(path_im)
+
+        # Create path to store eeg if not there
+        path_eeg = os.path.join(store_data_path , 'eeg')
+        if not os.path.exists(path_eeg):
+            os.makedirs(path_eeg)
+            path_eeg = os.path.abspath(path_eeg)
+
+        user_folder_name = "user_"+User_ID+"_"+stimuli_type
+
+        path_im = os.path.join(path_im, user_folder_name)
+        if not os.path.exists(path_im):
+            os.makedirs(path_im)
+
+        path_eeg = os.path.join(path_eeg, user_folder_name)
+        if not os.path.exists(path_eeg):
+            os.makedirs(path_eeg)
+
         self.manager.transition = SlideTransition(direction="left")
         self.manager.current = 'game_screen'
         self.manager.get_screen('game_screen').start_game()
+
 
 
 class NbackGame(Screen):
@@ -94,8 +133,8 @@ class NbackGame(Screen):
             self.generate_instruction()
 
     def generate_instruction(self):
-        global game_type
-
+        global game_type, Block_Id
+        print("Block ID", Block_Id, "Game type", game_type)
         if game_type == 0:
             self.ids["instruction"].source = "../AppData/Nback_visual/inst_0-back.png"
             self.generate_0back_seq(game_type)
@@ -121,7 +160,7 @@ class NbackApp(App):
         return screen_mgr
 
 
-def main(game,user_id,stimuli,block_id, data_path):
+def main(stimuli, data_path):
     """
     This is the main function of the game. The starting point.
 
@@ -133,7 +172,7 @@ def main(game,user_id,stimuli,block_id, data_path):
     """
 
     #defining global variables for application
-    global User_ID, modality, Block_Id, quit, store_data_path, timer_val, game_type
+    global User_ID, modality, Block_Id, quit, store_data_path, timer_val, game_type, stimuli_type
     global total_stimuli    # Total number of stimuli being presented to the user
     global correct_press    # Total number of times the user pressed the space bar for the correct target
     global correct_miss     # Total number of times the user missed the space-bar for the correct non-target
@@ -149,37 +188,14 @@ def main(game,user_id,stimuli,block_id, data_path):
 
     # Parameter initialization
     store_data_path =data_path
-    game_type = game
+    # game_type = game
     total_stimuli = 64
-    Block_Id = block_id
+    # Block_Id = block_id
     quit = False
     timer_val = 5
-    User_ID = str(user_id)
+    stimuli_type = stimuli
+    # User_ID = str(user_id)
     correct_press, correct_miss, total_false, incorrect_miss = 0,0,0,0
-
-
-    # Create path to store images if not there
-    path_im = os.path.join(store_data_path,'images')
-    if not os.path.exists(path_im):
-        os.makedirs(path_im)
-        path_im = os.path.abspath(path_im)
-
-    # Create path to store eeg if not there
-    path_eeg = os.path.join(store_data_path , 'eeg')
-    if not os.path.exists(path_eeg):
-        os.makedirs(path_eeg)
-        path_eeg = os.path.abspath(path_eeg)
-
-    user_folder_name = "user_"+User_ID+"_"+stimuli
-
-
-    path_im = os.path.join(path_im, user_folder_name)
-    if not os.path.exists(path_im):
-        os.makedirs(path_im)
-
-    path_eeg = os.path.join(path_eeg, user_folder_name)
-    if not os.path.exists(path_eeg):
-        os.makedirs(path_eeg)
 
     # Run game and recording into threads
     thread1 = Thread(target=NbackApp().run())
@@ -197,5 +213,5 @@ def main(game,user_id,stimuli,block_id, data_path):
 
 
 if __name__ == '__main__':
-   # main(2,'test_user','v',1,'/media/akilesh/data/fatigue_fitbit')
-   main(0,0,'v',1,'~/data/')
+   # main('v','/media/akilesh/data/fatigue_fitbit')
+   main('v','/Users/akileshrajavenkatanarayanan/data/')
