@@ -4,10 +4,9 @@ from kivy.uix.floatlayout import FloatLayout
 from kivy.lang import Builder
 from kivy.core.audio import SoundLoader
 from kivy.clock import Clock
-from kivy.uix.label import Label
 from kivy.uix.screenmanager import ScreenManager, Screen, SlideTransition
 from kivy.config import Config
-
+from kivy.core.window import Window
 import numpy as np
 import cv2, sys,os, datetime, re
 from threading import Thread
@@ -68,7 +67,7 @@ def readFrames(path):
     sys.exit()
     # cv2.destroyAllWindows()
 
-
+# class KeyboardListner
 # Initialize variables
 class NbackMain(Screen,FloatLayout):
 
@@ -122,6 +121,9 @@ class NbackGame(Screen,FloatLayout):
         self.inst_path = "../AppData/Nback_visual/" # Location of the list of files we display as instructions
         self.re_pattern = '[0-9]+_'                 # Regex to read only the instruction files.
         self.inst_files = []                        # List of files that we display for instructions
+        self.curr_stimuli = []
+        self.user_response = []
+
         global total_stimuli
         self.stimuli_id = total_stimuli -1
 
@@ -131,7 +133,6 @@ class NbackGame(Screen,FloatLayout):
         self.blank_scheduler = None                 # blank image event scheduler
 
     def start_game(self):
-
         self.timer = Clock.schedule_interval(self.timercallback, 1)
 
     def timercallback(self, val):
@@ -163,6 +164,9 @@ class NbackGame(Screen,FloatLayout):
             Clock.schedule_once(self.generate_2back_seq,5)
 
     def generate_0back_seq(self,_):
+        self._keyboard = Window.request_keyboard(self._keyboard_closed, self)
+        self._keyboard.bind(on_key_down=self._on_keyboard_down)
+
         # Take the entire list of 64 images and show it randomly. Will have 8 targets.
         self.ids["instruction"].opacity = 0
         self.back_0_scheduler = Clock.schedule_interval(self.set_instructions,2)
@@ -172,14 +176,25 @@ class NbackGame(Screen,FloatLayout):
         print(_)
 
     def set_instructions(self,_):
-        print(self.stimuli_id)
+        self.curr_stimuli.append(self.inst_files[self.stimuli_id])
         self.ids["stimuli"].source = os.path.join(self.inst_path + self.inst_files[self.stimuli_id])
         self.ids["stimuli"].opacity = 1
         self.stimuli_id -= 1
         if self.stimuli_id == 0:
-            self.ids["stimuli"].opacity =0
+            self.ids["stimuli"].opacity = 0
             self.back_0_scheduler.cancel()
 
+    def _keyboard_closed(self):
+        self._keyboard.unbind(on_key_down=self._on_keyboard_down)
+        self._keyboard = None
+
+    def _on_keyboard_down(self, keyboard, keycode, text, modifiers):
+
+        if keycode[1] == 'spacebar':
+            self.user_response.append(keycode[1])
+            print(keycode[1], self.curr_stimuli)
+
+        return True
 
 class NbackApp(App):
     def build(self):
@@ -203,6 +218,7 @@ def main(stimuli, data_path):
 
     #defining global variables for application
     global User_ID, modality, Block_Id, quit, store_data_path, timer_val, game_type, stimuli_type
+
     global total_stimuli    # Total number of stimuli being presented to the user
     global correct_press    # Total number of times the user pressed the space bar for the correct target
     global correct_miss     # Total number of times the user missed the space-bar for the correct non-target
