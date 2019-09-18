@@ -122,6 +122,7 @@ class NbackGame(Screen,FloatLayout):
         self.re_pattern = '[0-9]+_'                 # Regex to read only the instruction files.
         self.inst_files = []                        # List of files that we display for instructions
         self.curr_stimuli = []
+        self.key_stroke = ''
         self.user_response = []
 
         global total_stimuli
@@ -176,13 +177,18 @@ class NbackGame(Screen,FloatLayout):
         print(_)
 
     def set_instructions(self,_):
-        self.curr_stimuli.append(self.inst_files[self.stimuli_id])
         self.ids["stimuli"].source = os.path.join(self.inst_path + self.inst_files[self.stimuli_id])
         self.ids["stimuli"].opacity = 1
         self.stimuli_id -= 1
+        self.key_stroke = ''    # Setting user key stroke to empty for every round.
+        self.curr_stimuli.append(self.inst_files[self.stimuli_id])
+        if self.key_stroke == '':
+            self.user_response.append(self.key_stroke)
+        print("In set inst", self.user_response)
         if self.stimuli_id == 0:
             self.ids["stimuli"].opacity = 0
             self.back_0_scheduler.cancel()
+            # self.log_and_terminate()
 
     def _keyboard_closed(self):
         self._keyboard.unbind(on_key_down=self._on_keyboard_down)
@@ -191,10 +197,13 @@ class NbackGame(Screen,FloatLayout):
     def _on_keyboard_down(self, keyboard, keycode, text, modifiers):
 
         if keycode[1] == 'spacebar':
-            self.user_response.append(keycode[1])
-            print(keycode[1], self.curr_stimuli)
+            # self.user_response.append(keycode[1])
+            self.key_stroke = keycode[1]
+            print(self.key_stroke, self.curr_stimuli)
+            # self.check_response()
 
         return True
+
 
 class NbackApp(App):
     def build(self):

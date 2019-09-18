@@ -2,8 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="b2fc5896-0918-4279-ac41-b54bcbe29199" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/fatigue_fitbit.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/fatigue_fitbit.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.py" afterDir="false" />
     </list>
@@ -242,7 +240,14 @@
       <option name="project" value="LOCAL" />
       <updated>1568673140419</updated>
     </task>
-    <option name="localTasksCounter" value="15" />
+    <task id="LOCAL-00015" summary="added logic to record user input">
+      <created>1568755820587</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1568755820587</updated>
+    </task>
+    <option name="localTasksCounter" value="16" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -270,6 +275,7 @@
     <MESSAGE value="added task performance params" />
     <MESSAGE value="made changes to the image containers" />
     <MESSAGE value="added 0-back logic" />
-    <option name="LAST_COMMIT_MESSAGE" value="added 0-back logic" />
+    <MESSAGE value="added logic to record user input" />
+    <option name="LAST_COMMIT_MESSAGE" value="added logic to record user input" />
   </component>
 </project>
