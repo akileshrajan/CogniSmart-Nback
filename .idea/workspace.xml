@@ -3,6 +3,9 @@
   <component name="ChangeListManager">
     <list default="true" id="b2fc5896-0918-4279-ac41-b54bcbe29199" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AppData/Nback_visual/inst_0-back.png" beforeDir="false" afterPath="$PROJECT_DIR$/AppData/Nback_visual/inst_0-back.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AppData/Nback_visual/inst_2-back.png" beforeDir="false" afterPath="$PROJECT_DIR$/AppData/Nback_visual/inst_2-back.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AppData/im_resize.py" beforeDir="false" afterPath="$PROJECT_DIR$/AppData/im_resize.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -247,7 +250,14 @@
       <option name="project" value="LOCAL" />
       <updated>1568755820587</updated>
     </task>
-    <option name="localTasksCounter" value="16" />
+    <task id="LOCAL-00016" summary="minor changes">
+      <created>1568839738831</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1568839738831</updated>
+    </task>
+    <option name="localTasksCounter" value="17" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -270,12 +280,12 @@
     <MESSAGE value="added .kv file and other app data changes" />
     <MESSAGE value="modified .kv file" />
     <MESSAGE value="Added welcome screen. Added timer on game start" />
-    <MESSAGE value="minor changes" />
     <MESSAGE value="change inst image name." />
     <MESSAGE value="added task performance params" />
     <MESSAGE value="made changes to the image containers" />
     <MESSAGE value="added 0-back logic" />
     <MESSAGE value="added logic to record user input" />
-    <option name="LAST_COMMIT_MESSAGE" value="added logic to record user input" />
+    <MESSAGE value="minor changes" />
+    <option name="LAST_COMMIT_MESSAGE" value="minor changes" />
   </component>
 </project>

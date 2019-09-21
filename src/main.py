@@ -122,6 +122,7 @@ class NbackGame(Screen,FloatLayout):
         self.re_pattern = '[0-9]+_'                 # Regex to read only the instruction files.
         self.inst_files = []                        # List of files that we display for instructions
         self.curr_stimuli = []
+        self.stimuli = ''
         self.key_stroke = ''
         self.user_response = []
 
@@ -177,17 +178,20 @@ class NbackGame(Screen,FloatLayout):
         print(_)
 
     def set_instructions(self,_):
-        self.ids["stimuli"].source = os.path.join(self.inst_path + self.inst_files[self.stimuli_id])
+        self.stimuli = self.inst_files[self.stimuli_id]
+        self.ids["stimuli"].source = os.path.join(self.inst_path + self.stimuli)
         self.ids["stimuli"].opacity = 1
         self.stimuli_id -= 1
         self.key_stroke = ''    # Setting user key stroke to empty for every round.
-        self.curr_stimuli.append(self.inst_files[self.stimuli_id])
-        if self.key_stroke == '':
-            self.user_response.append(self.key_stroke)
-        print("In set inst", self.user_response)
+        self.curr_stimuli.append(self.stimuli)
+        if 'heart' not in self.stimuli:
+            self.user_response.append('')
+
+        # print("In set inst", self.user_response)
         if self.stimuli_id == 0:
             self.ids["stimuli"].opacity = 0
             self.back_0_scheduler.cancel()
+            print(len(self.user_response),len(self.curr_stimuli),'\n', self.curr_stimuli, '\n', self.user_response)
             # self.log_and_terminate()
 
     def _keyboard_closed(self):
@@ -197,12 +201,23 @@ class NbackGame(Screen,FloatLayout):
     def _on_keyboard_down(self, keyboard, keycode, text, modifiers):
 
         if keycode[1] == 'spacebar':
-            # self.user_response.append(keycode[1])
+            self.user_response.append(keycode[1])
             self.key_stroke = keycode[1]
-            print(self.key_stroke, self.curr_stimuli)
-            # self.check_response()
+            # print(self.key_stroke, self.curr_stimuli)
+            self.check_response()
+
+        if keycode[1] == 'escape':
+            App.get_running_app().stop()
 
         return True
+
+    def check_response(self):
+        global correct_press, total_false
+
+        if 'heart' in self.stimuli and self.key_stroke == 'spacebar':
+            correct_press += 1
+        elif 'heart' not in self.stimuli and self.key_stroke == 'spacebar':
+            total_false +=1
 
 
 class NbackApp(App):
@@ -230,8 +245,13 @@ def main(stimuli, data_path):
 
     global total_stimuli    # Total number of stimuli being presented to the user
     global correct_press    # Total number of times the user pressed the space bar for the correct target
+    correct_press = 0
+
     global correct_miss     # Total number of times the user missed the space-bar for the correct non-target
+
     global total_false      # Total number of times the user pressed the space-bar for the incorrect target
+    total_false = 0
+
     global incorrect_miss   # Total number of times the user missed the space-bar for the correct target
     global score            # Overall percentage of correct hits and miss.
     global corrects_acc     # Percent of correct hits
