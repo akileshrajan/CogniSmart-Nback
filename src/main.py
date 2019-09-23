@@ -8,11 +8,14 @@ from kivy.uix.screenmanager import ScreenManager, Screen, SlideTransition
 from kivy.config import Config
 from kivy.core.window import Window
 import numpy as np
-import cv2, sys,os, datetime, re
+import pandas as pd
+import cv2, sys, os, datetime, re, time
 from threading import Thread
+
 kivy.require('1.9.0')
 
 import MUSE_Server as mps
+
 # from .MUSE_Server import MuseServer as mps
 # import MUSE_Server as mps
 
@@ -22,15 +25,15 @@ Clock.max_iteration = 70
 
 
 def readMuse(path):
-    global server,round_set,user_id, round_id, quit
+    global server, round_set, user_id, round_id, quit
     intro = open('test', 'w')
     server = mps.initialize(intro)
     server.start()
     round_id = None
     prev_round = round_id
-    while(True):
+    while (True):
         if round_id != prev_round:
-            eeg_name = ('/').join((path,str(round_set) + "_" + str(round_id)))
+            eeg_name = ('/').join((path, str(round_set) + "_" + str(round_id)))
             out = open(eeg_name, 'w')
             server.f = out
             prev_round = round_id
@@ -67,9 +70,10 @@ def readFrames(path):
     sys.exit()
     # cv2.destroyAllWindows()
 
+
 # class KeyboardListner
 # Initialize variables
-class NbackMain(Screen,FloatLayout):
+class NbackMain(Screen, FloatLayout):
 
     def on_text_change(self, usr_id):
         global User_ID
@@ -89,18 +93,18 @@ class NbackMain(Screen,FloatLayout):
         # timer = Clock.schedule_interval(game.timercallback, 1)
         # Create path to store images if not there
         global User_ID, stimuli_type
-        path_im = os.path.join(store_data_path,'images')
+        path_im = os.path.join(store_data_path, 'images')
         if not os.path.exists(path_im):
             os.makedirs(path_im)
             path_im = os.path.abspath(path_im)
 
         # Create path to store eeg if not there
-        path_eeg = os.path.join(store_data_path , 'eeg')
+        path_eeg = os.path.join(store_data_path, 'eeg')
         if not os.path.exists(path_eeg):
             os.makedirs(path_eeg)
             path_eeg = os.path.abspath(path_eeg)
 
-        user_folder_name = "user_"+User_ID+"_"+stimuli_type
+        user_folder_name = "user_" + User_ID + "_" + stimuli_type
 
         path_im = os.path.join(path_im, user_folder_name)
         if not os.path.exists(path_im):
@@ -115,29 +119,34 @@ class NbackMain(Screen,FloatLayout):
         self.manager.get_screen('game_screen').start_game()
 
 
-class NbackGame(Screen,FloatLayout):
+class NbackGame(Screen, FloatLayout):
     def __init__(self, **kw):
         super(NbackGame, self).__init__(**kw)
-        self.inst_path = "../AppData/Nback_visual/" # Location of the list of files we display as instructions
-        self.re_pattern = '[0-9]+_'                 # Regex to read only the instruction files.
-        self.inst_files = []                        # List of files that we display for instructions
+        self.inst_path = "../AppData/Nback_visual/"  # Location of the list of files we display as instructions
+        self.re_pattern = '[0-9]+_'  # Regex to read only the instruction files.
+        self.inst_files = []  # List of files that we display for instructions
         self.curr_stimuli = []
         self.stimuli = ''
         self.key_stroke = ''
         self.user_response = []
 
-        global total_stimuli
-        self.stimuli_id = total_stimuli -1
+        self.stimuli_id = 0
 
-        self.timer = None                           # timer event scheduler
-        self.back_0_scheduler= None                 # 0-back event scheduler
-        self.back_2_scheduler = None                # 2_back event scheduler
-        self.blank_scheduler = None                 # blank image event scheduler
+        self.start_time = None  # start time for each round
+        self.end_time = None # end time for each round
+        self.back_0_scheduler = None  # 0-back event sche
+        # duler
+        self.back_2_scheduler = None  # 2_back event scheduler
 
     def start_game(self):
         self.timer = Clock.schedule_interval(self.timercallback, 1)
 
-    def timercallback(self, val):
+    def timercallback(self, _):
+        """
+        Function to generate the countdown at the beginning of the game.
+        :param _:
+        :return: No return value
+        """
         global timer_val, timer
         timer_val -= 1
         # print(timer_val)
@@ -145,79 +154,168 @@ class NbackGame(Screen,FloatLayout):
         if timer_val == 0:
             self.ids['timer'].text = ''
             self.timer.cancel()
-            self.generate_instruction()
+            self.check_gametype()
 
-    def generate_instruction(self):
+    def check_gametype(self):
+        """
+        Function to check game time and start setting instructions
+        :return:
+        """
         global game_type, Block_Id
-        import numpy as np
+
         # print("Block ID", Block_Id, "Game type", game_type)
 
-        self.inst_files = [item for item in os.listdir(self. inst_path) if re.match(self.re_pattern, item)]
+        self.inst_files = [item for item in os.listdir(self.inst_path) if re.match(self.re_pattern, item)]
         np.random.shuffle(self.inst_files)
 
         if game_type == 0:
             self.ids["instruction"].source = "../AppData/Nback_visual/inst_0-back.png"
             self.ids["instruction"].opacity = 1
-            Clock.schedule_once(self.generate_0back_seq,5)
+            Clock.schedule_once(self.generate_0back_seq, 5)
 
         elif game_type == 2:
             self.ids["instruction"].source = "../AppData/Nback_visual/inst_2-back.png"
             self.ids["instruction"].opacity = 1
-            Clock.schedule_once(self.generate_2back_seq,5)
+            Clock.schedule_once(self.generate_2back_seq, 5)
 
-    def generate_0back_seq(self,_):
+    def generate_0back_seq(self, _):
+        """
+        Function to generate 0-back instructions
+        :param _:
+        :return:
+        """
         self._keyboard = Window.request_keyboard(self._keyboard_closed, self)
         self._keyboard.bind(on_key_down=self._on_keyboard_down)
 
         # Take the entire list of 64 images and show it randomly. Will have 8 targets.
         self.ids["instruction"].opacity = 0
-        self.back_0_scheduler = Clock.schedule_interval(self.set_instructions,2)
+        self.back_0_scheduler = Clock.schedule_interval(self.generate_0back_inst, 2)
         # self.blank_scheduler = Clock.schedule_interval(self.set_blanks, 2)
 
-    def generate_2back_seq(self,_):
-        print(_)
+    def generate_2back_seq(self, _):
+        self._keyboard = Window.request_keyboard(self._keyboard_closed, self)
+        self._keyboard.bind(on_key_down=self._on_keyboard_down)
 
-    def set_instructions(self,_):
-        self.stimuli = self.inst_files[self.stimuli_id]
-        self.ids["stimuli"].source = os.path.join(self.inst_path + self.stimuli)
+        # Take the entire list of 64 images and show it randomly. Will have 8 targets.
+        self.ids["instruction"].opacity = 0
+        self.back_2_scheduler = Clock.schedule_interval(self.generate_2back_inst, 2)
+
+    def generate_0back_inst(self, _):
+        self.start_time = time.time()   # Starting the timer for calculation reaction time
+
+        global total_stimuli, reaction_time
+        self.stimuli = self.inst_files[self.stimuli_id]     # grabbing the first instruction
+        self.stimuli_id += 1    # looping through the list of stimuli
+        self.ids["stimuli"].source = os.path.join(self.inst_path + self.stimuli)    # setting the stimuli label
         self.ids["stimuli"].opacity = 1
-        self.stimuli_id -= 1
-        self.key_stroke = ''    # Setting user key stroke to empty for every round.
+
+        self.key_stroke = ''  # Setting user key stroke to empty for every round.
         self.curr_stimuli.append(self.stimuli)
-        if 'heart' not in self.stimuli:
-            self.user_response.append('')
+        self.user_response.append('')
+        reaction_time.append(0)
 
         # print("In set inst", self.user_response)
-        if self.stimuli_id == 0:
+        if self.stimuli_id >= total_stimuli:
             self.ids["stimuli"].opacity = 0
             self.back_0_scheduler.cancel()
-            print(len(self.user_response),len(self.curr_stimuli),'\n', self.curr_stimuli, '\n', self.user_response)
-            # self.log_and_terminate()
+            self._log_and_terminate()
 
     def _keyboard_closed(self):
         self._keyboard.unbind(on_key_down=self._on_keyboard_down)
         self._keyboard = None
 
     def _on_keyboard_down(self, keyboard, keycode, text, modifiers):
+        global reaction_time
 
         if keycode[1] == 'spacebar':
-            self.user_response.append(keycode[1])
+            self.end_time = time.time()
+            reaction_time[self.stimuli_id-1] = (round((self.end_time - self.start_time),4))
+            self.user_response[self.stimuli_id-1] = keycode[1]
             self.key_stroke = keycode[1]
             # print(self.key_stroke, self.curr_stimuli)
-            self.check_response()
-
-        if keycode[1] == 'escape':
+        elif keycode[1] == 'escape':
             App.get_running_app().stop()
+        else:
+            self.end_time = time.time()
+            reaction_time[self.stimuli_id-1] = (round((self.end_time - self.start_time),4))
+            self.user_response[self.stimuli_id-1] = 'wrong_key'
+            self.key_stroke = keycode[1]
 
         return True
 
-    def check_response(self):
-        global correct_press, total_false
+    def _log_and_terminate(self):
+        print(len(self.user_response), len(self.curr_stimuli), '\n', self.curr_stimuli, '\n', self.user_response)
 
-        if 'heart' in self.stimuli and self.key_stroke == 'spacebar':
-            correct_press += 1
-        elif 'heart' not in self.stimuli and self.key_stroke == 'spacebar':
-            total_false +=1
+        global User_ID, Block_Id, game_type
+        if game_type == 0:
+            self._check_0back_response()    # check user's response for each round
+        elif game_type == 2:
+            self._check_2back_response()    # check user's response for each round
+
+        global total_stimuli
+        global correct_press, incorrect_press, incorrect_miss, correct_miss, score, reaction_time
+
+        # print('\n', 'correct press:', correct_press, '\n', 'correct miss:', correct_miss,
+        #       '\n', 'incorrect press:', incorrect_press, '\n', 'incorrect miss:', '\n', incorrect_miss, '\n',
+        #       'Score:',score,'reaction time:', reaction_time)
+
+        # Convert the lists into numpy array
+        # self.user_response = np.asarray(self.user_response)
+        # self.curr_stimuli = np.asarray(self.curr_stimuli)
+        # correct_press = np.asarray(correct_press)
+        # incorrect_press = np.asarray(incorrect_press)
+        # correct_miss = np.asarray(correct_miss)
+        # incorrect_miss = np.asarray(incorrect_miss)
+        # score = np.asarray(score)
+        # reaction_time = np.asarray(reaction_time)
+
+        # convert the numpy arrays into a data frame and save it to a file
+        final_data = pd.DataFrame()
+        final_data['User Resp'] = self.user_response
+        final_data['Stimuli'] = self.curr_stimuli
+        final_data['Total corr press'] = correct_press
+        final_data['Total incor press'] = incorrect_press
+        final_data['Total corr miss'] = correct_miss
+        final_data['Total incorr miss'] = incorrect_miss
+        final_data['Score'] = score
+        final_data['Reaction Time'] = reaction_time
+
+        op_filename = str(User_ID)+str(Block_Id) +str(game_type)+'.csv'
+
+        App.get_running_app().stop()
+
+    def _check_0back_response(self):
+        global correct_press, incorrect_press, incorrect_miss, correct_miss     # final list
+        corr_press, incorr_press, corr_miss, incorr_miss = 0, 0, 0, 0
+
+        for idx, item in enumerate(self.curr_stimuli):
+            if 'heart' in item and self.user_response[idx] == 'spacebar':
+                corr_press +=1
+            elif 'heart' not in item and self.user_response[idx] != 'spacebar':
+                corr_miss += 1
+
+            elif 'heart' not in item and self.user_response[idx] == 'spacebar':
+                incorr_press += 1
+
+            elif 'heart' in item and self.user_response[idx] != 'spacebar':
+                incorr_miss += 1
+
+            # Append data into the final list
+            correct_press.append(corr_press)
+            correct_miss.append(corr_miss)
+            incorrect_press.append(incorr_press)
+            incorrect_miss.append(incorr_miss)
+            score.append((((corr_press+corr_miss) / total_stimuli) * 100) - (incorr_miss + incorr_press))
+
+
+        # if 'heart' in self.stimuli and self.key_stroke == 'spacebar':
+        #     correct_press += 1
+        # elif 'heart' not in self.stimuli and self.key_stroke == 'spacebar':
+        #     incorrect_press += 1
+        # elif 'heart' in self.stimuli and self.key_stroke != 'spacebar':
+        #     incorrect_miss += 1
+        # elif 'heart' not in self.stimuli and self.key_stroke != 'spacebar':
+        #     correct_miss += 1
 
 
 class NbackApp(App):
@@ -232,37 +330,38 @@ class NbackApp(App):
 def main(stimuli, data_path):
     """
     This is the main function of the game. The starting point.
-
-    :param game: Type of game. Two possible inputs. 0-back = '0', 2-back = '2'
-    :param user: User ID. dtype = str. eg: 'test_user', '0', '1', '2'...
     :param stimuli: Type of Stimuli. Two possible stimuli. Visual = 'v', audio '0'
     :param data_path: Location to store the data. In my case "/media/akilesh/data/fatigue_fitbit"
     :return: No return value.
     """
 
-    #defining global variables for application
+    # defining global variables for application
     global User_ID, modality, Block_Id, quit, store_data_path, timer_val, game_type, stimuli_type
 
-    global total_stimuli    # Total number of stimuli being presented to the user
-    global correct_press    # Total number of times the user pressed the space bar for the correct target
-    correct_press = 0
+    global total_stimuli  # Total number of stimuli being presented to the user
+    global correct_press  # Total number of times the user pressed the space bar for the correct target
+    correct_press = []
 
-    global correct_miss     # Total number of times the user missed the space-bar for the correct non-target
+    global correct_miss  # Total number of times the user missed the space-bar for the correct non-target
+    correct_miss = []
 
-    global total_false      # Total number of times the user pressed the space-bar for the incorrect target
-    total_false = 0
+    global incorrect_press  # Total number of times the user pressed the space-bar for the incorrect target
+    incorrect_press = []
 
-    global incorrect_miss   # Total number of times the user missed the space-bar for the correct target
-    global score            # Overall percentage of correct hits and miss.
-    global corrects_acc     # Percent of correct hits
-    global incorrects_acc   # Percent of incorrect hits out of non-target.
-    global reaction_time    # Reaction time for each stimuli
+    global incorrect_miss  # Total number of times the user missed the space-bar for the correct target
+    incorrect_miss = []
+
+    global score  # Overall percentage of correct hits and miss minus the total number of incorrect hits and miss.
+    score = []
+
+    global reaction_time  # Reaction time for each stimuli
+    reaction_time = []
 
     Config.set('graphics', 'width', str(1500))
     Config.set('graphics', 'height', str(1000))
 
     # Parameter initialization
-    store_data_path =data_path
+    store_data_path = data_path
     # game_type = game
     total_stimuli = 64
     # Block_Id = block_id
@@ -270,7 +369,6 @@ def main(stimuli, data_path):
     timer_val = 5
     stimuli_type = stimuli
     # User_ID = str(user_id)
-    correct_press, correct_miss, total_false, incorrect_miss = 0,0,0,0
 
     # Run game and recording into threads
     thread1 = Thread(target=NbackApp().run())
@@ -288,5 +386,5 @@ def main(stimuli, data_path):
 
 
 if __name__ == '__main__':
-   main('v','/media/akilesh/data/fatigue_fitbit')
-   # main('v','/Users/akileshrajavenkatanarayanan/data/')
+    # main('v','/media/akilesh/data/fatigue_fitbit')
+    main('v', '/Users/akileshrajavenkatanarayanan/data/')
