@@ -74,6 +74,11 @@ def readFrames(path):
 # class KeyboardListner
 # Initialize variables
 class NbackMain(Screen, FloatLayout):
+    def __init__(self, **kw):
+        super(NbackMain,self).__init__(**kw)
+        self.path_usr = None
+        self.path_eeg = None
+        self.path_im = None
 
     def on_text_change(self, usr_id):
         global User_ID
@@ -92,27 +97,30 @@ class NbackMain(Screen, FloatLayout):
         # global timer
         # timer = Clock.schedule_interval(game.timercallback, 1)
         # Create path to store images if not there
-        global User_ID, stimuli_type
-        path_im = os.path.join(store_data_path, 'images')
-        if not os.path.exists(path_im):
-            os.makedirs(path_im)
-            path_im = os.path.abspath(path_im)
+        global User_ID, store_data_path, Block_Id
+        user_folder_name = "user_" + str(User_ID)
+        # self.path_usr = os.path.join(store_data_path,user_folder_name)
+        user_folder = os.path.join(store_data_path,user_folder_name)
+        if not os.path.exists(user_folder):
+            os.mkdir(user_folder)
+            user_folder = os.path.abspath(user_folder)
+
+        block_folder_name = 'block'+str(Block_Id)
+        self.path_usr = os.path.join(user_folder, block_folder_name)
+        if not os.path.exists(self.path_usr):
+            os.mkdir(self.path_usr)
+            self.path_usr = os.path.abspath(self.path_usr)
+
+        self.path_im = os.path.join(self.path_usr, 'images')
+        if not os.path.exists(self.path_im):
+            os.makedirs(self.path_im)
+            self.path_im = os.path.abspath(self.path_im)
 
         # Create path to store eeg if not there
-        path_eeg = os.path.join(store_data_path, 'eeg')
-        if not os.path.exists(path_eeg):
-            os.makedirs(path_eeg)
-            path_eeg = os.path.abspath(path_eeg)
-
-        user_folder_name = "user_" + User_ID + "_" + stimuli_type
-
-        path_im = os.path.join(path_im, user_folder_name)
-        if not os.path.exists(path_im):
-            os.makedirs(path_im)
-
-        path_eeg = os.path.join(path_eeg, user_folder_name)
-        if not os.path.exists(path_eeg):
-            os.makedirs(path_eeg)
+        self.path_eeg = os.path.join(self.path_usr, 'eeg')
+        if not os.path.exists(self.path_eeg):
+            os.makedirs(self.path_eeg)
+            self.path_eeg = os.path.abspath(self.path_eeg)
 
         self.manager.transition = SlideTransition(direction="left")
         self.manager.current = 'game_screen'
@@ -134,8 +142,7 @@ class NbackGame(Screen, FloatLayout):
 
         self.start_time = None  # start time for each round
         self.end_time = None # end time for each round
-        self.back_0_scheduler = None  # 0-back event sche
-        # duler
+        self.back_0_scheduler = None  # 0-back event scheduler
         self.back_2_scheduler = None  # 2_back event scheduler
 
     def start_game(self):
@@ -280,7 +287,13 @@ class NbackGame(Screen, FloatLayout):
         final_data['Score'] = score
         final_data['Reaction Time'] = reaction_time
 
-        op_filename = str(User_ID)+str(Block_Id) +str(game_type)+'.csv'
+        # get save path
+        # file_save_path = self.manager.get_screen('main_screen').path_usr
+        #
+        # op_filename = str(User_ID)+'_'+str(Block_Id)+'_'+str(game_type)+'.csv'
+        file_path = os.path.join(self.manager.get_screen('main_screen').path_usr, str(User_ID)+'_'+str(Block_Id)+'_'+str(game_type)+'.csv')
+        print(final_data,'\n', file_path)
+        export_csv = final_data.to_csv(file_path, index=None, header= True)
 
         App.get_running_app().stop()
 
@@ -306,16 +319,6 @@ class NbackGame(Screen, FloatLayout):
             incorrect_press.append(incorr_press)
             incorrect_miss.append(incorr_miss)
             score.append((((corr_press+corr_miss) / total_stimuli) * 100) - (incorr_miss + incorr_press))
-
-
-        # if 'heart' in self.stimuli and self.key_stroke == 'spacebar':
-        #     correct_press += 1
-        # elif 'heart' not in self.stimuli and self.key_stroke == 'spacebar':
-        #     incorrect_press += 1
-        # elif 'heart' in self.stimuli and self.key_stroke != 'spacebar':
-        #     incorrect_miss += 1
-        # elif 'heart' not in self.stimuli and self.key_stroke != 'spacebar':
-        #     correct_miss += 1
 
 
 class NbackApp(App):
@@ -386,5 +389,5 @@ def main(stimuli, data_path):
 
 
 if __name__ == '__main__':
-    # main('v','/media/akilesh/data/fatigue_fitbit')
-    main('v', '/Users/akileshrajavenkatanarayanan/data/')
+    main('v','/media/akilesh/data/fatigue_fitbit')
+    # main('v', '/Users/akileshrajavenkatanarayanan/data/')
