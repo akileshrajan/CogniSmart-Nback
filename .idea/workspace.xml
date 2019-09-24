@@ -2,10 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="b2fc5896-0918-4279-ac41-b54bcbe29199" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/sequences.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/AppData/Nback_visual/inst_0-back.png" beforeDir="false" afterPath="$PROJECT_DIR$/AppData/Nback_visual/inst_0-back.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/AppData/Nback_visual/inst_2-back.png" beforeDir="false" afterPath="$PROJECT_DIR$/AppData/Nback_visual/inst_2-back.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/AppData/im_resize.py" beforeDir="false" afterPath="$PROJECT_DIR$/AppData/im_resize.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -257,7 +255,21 @@
       <option name="project" value="LOCAL" />
       <updated>1568839738831</updated>
     </task>
-    <option name="localTasksCounter" value="17" />
+    <task id="LOCAL-00017" summary="minor changes">
+      <created>1569026729039</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1569026729039</updated>
+    </task>
+    <task id="LOCAL-00018" summary="added write to csv functionality">
+      <created>1569276050662</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1569276050662</updated>
+    </task>
+    <option name="localTasksCounter" value="19" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -286,6 +298,7 @@
     <MESSAGE value="added 0-back logic" />
     <MESSAGE value="added logic to record user input" />
     <MESSAGE value="minor changes" />
-    <option name="LAST_COMMIT_MESSAGE" value="minor changes" />
+    <MESSAGE value="added write to csv functionality" />
+    <option name="LAST_COMMIT_MESSAGE" value="added write to csv functionality" />
   </component>
 </project>
