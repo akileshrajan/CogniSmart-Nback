@@ -15,7 +15,7 @@ from threading import Thread
 kivy.require('1.9.0')
 
 import MUSE_Server as mps
-
+from src.sequences import practice_0back, practice_2back
 # from .MUSE_Server import MuseServer as mps
 # import MUSE_Server as mps
 
@@ -137,6 +137,7 @@ class NbackGame(Screen, FloatLayout):
         self.stimuli = ''
         self.key_stroke = ''
         self.user_response = []
+        self.expected_resp = []     # Expected responses for 2-back tasks
 
         self.stimuli_id = 0
 
@@ -172,13 +173,14 @@ class NbackGame(Screen, FloatLayout):
 
         # print("Block ID", Block_Id, "Game type", game_type)
 
-        self.inst_files = [item for item in os.listdir(self.inst_path) if re.match(self.re_pattern, item)]
+
         np.random.shuffle(self.inst_files)
 
         if game_type == 0 and Block_Id not in 'Practice':
             self.ids["instruction"].source = "../AppData/Nback_visual/inst_0-back.png"
             self.ids["instruction"].opacity = 1
             Clock.schedule_once(self.generate_0back_seq, 5)
+            self.inst_files = [item for item in os.listdir(self.inst_path) if re.match(self.re_pattern, item)]
             total_stimuli = 64
         elif game_type == 2 and Block_Id not in 'Practice':
             self.ids["instruction"].source = "../AppData/Nback_visual/inst_2-back.png"
@@ -188,10 +190,12 @@ class NbackGame(Screen, FloatLayout):
         elif game_type == 0 and Block_Id == 'Practice':
             self.ids["instruction"].source = "../AppData/Nback_visual/inst_0-back.png"
             self.ids["instruction"].opacity = 1
+            self.inst_files = practice_0back()
             total_stimuli = 16
         elif game_type == 2 and Block_Id == 'Practice':
             self.ids["instruction"].source = "../AppData/Nback_visual/inst_2-back.png"
             self.ids["instruction"].opacity = 1
+            self.inst_files, expected_resp = practice_2back()
             total_stimuli = 16
 
     def generate_0back_seq(self, _):
