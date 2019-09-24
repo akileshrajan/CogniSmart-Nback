@@ -168,28 +168,37 @@ class NbackGame(Screen, FloatLayout):
         Function to check game time and start setting instructions
         :return:
         """
-        global game_type, Block_Id
+        global game_type, Block_Id, total_stimuli
 
         # print("Block ID", Block_Id, "Game type", game_type)
 
         self.inst_files = [item for item in os.listdir(self.inst_path) if re.match(self.re_pattern, item)]
         np.random.shuffle(self.inst_files)
 
-        if game_type == 0:
+        if game_type == 0 and Block_Id not in 'Practice':
             self.ids["instruction"].source = "../AppData/Nback_visual/inst_0-back.png"
             self.ids["instruction"].opacity = 1
             Clock.schedule_once(self.generate_0back_seq, 5)
-
-        elif game_type == 2:
+            total_stimuli = 64
+        elif game_type == 2 and Block_Id not in 'Practice':
             self.ids["instruction"].source = "../AppData/Nback_visual/inst_2-back.png"
             self.ids["instruction"].opacity = 1
             Clock.schedule_once(self.generate_2back_seq, 5)
+            total_stimuli = 64
+        elif game_type == 0 and Block_Id == 'Practice':
+            self.ids["instruction"].source = "../AppData/Nback_visual/inst_0-back.png"
+            self.ids["instruction"].opacity = 1
+            total_stimuli = 16
+        elif game_type == 2 and Block_Id == 'Practice':
+            self.ids["instruction"].source = "../AppData/Nback_visual/inst_2-back.png"
+            self.ids["instruction"].opacity = 1
+            total_stimuli = 16
 
     def generate_0back_seq(self, _):
         """
         Function to generate 0-back instructions
-        :param _:
-        :return:
+        :param _: dt
+        :return: None
         """
         self._keyboard = Window.request_keyboard(self._keyboard_closed, self)
         self._keyboard.bind(on_key_down=self._on_keyboard_down)
@@ -198,6 +207,17 @@ class NbackGame(Screen, FloatLayout):
         self.ids["instruction"].opacity = 0
         self.back_0_scheduler = Clock.schedule_interval(self.generate_0back_inst, 2)
         # self.blank_scheduler = Clock.schedule_interval(self.set_blanks, 2)
+
+    def generate_0back_practice(self,_):
+        """
+        Function to generate sequence for practice. For practice, we will use predefined sequence.
+        It will be same for everyone.
+        :param _: dt
+        :return: None
+        """
+        self._keyboard = Window.request_keyboard(self._keyboard_closed, self)
+        self._keyboard.bind(on_key_down=self._on_keyboard_down)
+        self.ids["instruction"].opacity = 0
 
     def generate_2back_seq(self, _):
         self._keyboard = Window.request_keyboard(self._keyboard_closed, self)
@@ -366,7 +386,7 @@ def main(stimuli, data_path):
     # Parameter initialization
     store_data_path = data_path
     # game_type = game
-    total_stimuli = 64
+
     # Block_Id = block_id
     quit = False
     timer_val = 5
