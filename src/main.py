@@ -190,13 +190,13 @@ class NbackGame(Screen, FloatLayout):
         elif game_type == 0 and Block_Id == 'Practice':
             self.ids["instruction"].source = "../AppData/Nback_visual/inst_0-back.png"
             self.ids["instruction"].opacity = 1
-            self.inst_files = practice_0back()
             total_stimuli = 16
+            Clock.schedule_once(self.generate_0back_practice, 5)
         elif game_type == 2 and Block_Id == 'Practice':
             self.ids["instruction"].source = "../AppData/Nback_visual/inst_2-back.png"
             self.ids["instruction"].opacity = 1
-            self.inst_files, expected_resp = practice_2back()
             total_stimuli = 16
+            Clock.schedule_once(self.generate_2back_practice, 5)
 
     def generate_0back_seq(self, _):
         """
@@ -214,7 +214,7 @@ class NbackGame(Screen, FloatLayout):
 
     def generate_0back_practice(self,_):
         """
-        Function to generate sequence for practice. For practice, we will use predefined sequence.
+        Function to generate 0-back sequence for practice. For practice, we will use predefined sequence.
         It will be same for everyone.
         :param _: dt
         :return: None
@@ -222,6 +222,7 @@ class NbackGame(Screen, FloatLayout):
         self._keyboard = Window.request_keyboard(self._keyboard_closed, self)
         self._keyboard.bind(on_key_down=self._on_keyboard_down)
         self.ids["instruction"].opacity = 0
+        self.inst_files = practice_0back()
 
     def generate_2back_seq(self, _):
         self._keyboard = Window.request_keyboard(self._keyboard_closed, self)
@@ -230,6 +231,18 @@ class NbackGame(Screen, FloatLayout):
         # Take the entire list of 64 images and show it randomly. Will have 8 targets.
         self.ids["instruction"].opacity = 0
         self.back_2_scheduler = Clock.schedule_interval(self.generate_2back_inst, 2)
+
+    def generate_2back_practice(self,_):
+        """
+        Function to generate 2-back sequence for practice. For practice, we will use predefined sequence.
+        It will be same for everyone.
+        :param _:
+        :return:
+        """
+        self._keyboard = Window.request_keyboard(self._keyboard_closed, self)
+        self._keyboard.bind(on_key_down=self._on_keyboard_down)
+        self.ids["instruction"].opacity = 0
+        self.inst_files, self.expected_resp = practice_2back()
 
     def generate_0back_inst(self, _):
         self.start_time = time.time()   # Starting the timer for calculation reaction time
@@ -289,16 +302,6 @@ class NbackGame(Screen, FloatLayout):
         # print('\n', 'correct press:', correct_press, '\n', 'correct miss:', correct_miss,
         #       '\n', 'incorrect press:', incorrect_press, '\n', 'incorrect miss:', '\n', incorrect_miss, '\n',
         #       'Score:',score,'reaction time:', reaction_time)
-
-        # Convert the lists into numpy array
-        # self.user_response = np.asarray(self.user_response)
-        # self.curr_stimuli = np.asarray(self.curr_stimuli)
-        # correct_press = np.asarray(correct_press)
-        # incorrect_press = np.asarray(incorrect_press)
-        # correct_miss = np.asarray(correct_miss)
-        # incorrect_miss = np.asarray(incorrect_miss)
-        # score = np.asarray(score)
-        # reaction_time = np.asarray(reaction_time)
 
         # convert the numpy arrays into a data frame and save it to a file
         final_data = pd.DataFrame()
@@ -413,5 +416,5 @@ def main(stimuli, data_path):
 
 
 if __name__ == '__main__':
-    main('v','/media/akilesh/data/fatigue_fitbit')
-    # main('v', '/Users/akileshrajavenkatanarayanan/data/')
+    # main('v','/media/akilesh/data/fatigue_fitbit')
+    main('v', '/Users/akileshrajavenkatanarayanan/data/')
