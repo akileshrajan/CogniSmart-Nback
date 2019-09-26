@@ -143,8 +143,8 @@ class NbackGame(Screen, FloatLayout):
 
         self.start_time = None  # start time for each round
         self.end_time = None # end time for each round
-        self.back_0_scheduler = None  # 0-back event scheduler
-        self.back_2_scheduler = None  # 2_back event scheduler
+        self.back_0_scheduler, self.practice_0back_scheduler = None, None  # 0-back event scheduler
+        self.back_2_scheduler, self.practice_2back_scheduler = None, None  # 2_back event scheduler
 
     def start_game(self):
         self.timer = Clock.schedule_interval(self.timercallback, 1)
@@ -172,20 +172,17 @@ class NbackGame(Screen, FloatLayout):
         global game_type, Block_Id, total_stimuli
 
         # print("Block ID", Block_Id, "Game type", game_type)
-
-
-        np.random.shuffle(self.inst_files)
-
         if game_type == 0 and Block_Id not in 'Practice':
             self.ids["instruction"].source = "../AppData/Nback_visual/inst_0-back.png"
             self.ids["instruction"].opacity = 1
             Clock.schedule_once(self.generate_0back_seq, 5)
             self.inst_files = [item for item in os.listdir(self.inst_path) if re.match(self.re_pattern, item)]
+            np.random.shuffle(self.inst_files)
             total_stimuli = 64
         elif game_type == 2 and Block_Id not in 'Practice':
             self.ids["instruction"].source = "../AppData/Nback_visual/inst_2-back.png"
             self.ids["instruction"].opacity = 1
-            Clock.schedule_once(self.generate_2back_seq, 5)
+            Clock.schedule_once(self.generate_2back_seq, 6)
             total_stimuli = 64
         elif game_type == 0 and Block_Id == 'Practice':
             self.ids["instruction"].source = "../AppData/Nback_visual/inst_0-back.png"
@@ -196,7 +193,7 @@ class NbackGame(Screen, FloatLayout):
             self.ids["instruction"].source = "../AppData/Nback_visual/inst_2-back.png"
             self.ids["instruction"].opacity = 1
             total_stimuli = 16
-            Clock.schedule_once(self.generate_2back_practice, 5)
+            Clock.schedule_once(self.generate_2back_practice, 6)
 
     def generate_0back_seq(self, _):
         """
@@ -223,6 +220,7 @@ class NbackGame(Screen, FloatLayout):
         self._keyboard.bind(on_key_down=self._on_keyboard_down)
         self.ids["instruction"].opacity = 0
         self.inst_files = practice_0back()
+        self.practice_0back_scheduler = Clock.schedule_interval(self.generate_0back_inst, 2)
 
     def generate_2back_seq(self, _):
         self._keyboard = Window.request_keyboard(self._keyboard_closed, self)
@@ -243,11 +241,12 @@ class NbackGame(Screen, FloatLayout):
         self._keyboard.bind(on_key_down=self._on_keyboard_down)
         self.ids["instruction"].opacity = 0
         self.inst_files, self.expected_resp = practice_2back()
+        self.practice_2back_scheduler = Clock.schedule_interval(self.generate_2back_inst, 2)
 
     def generate_0back_inst(self, _):
         self.start_time = time.time()   # Starting the timer for calculation reaction time
 
-        global total_stimuli, reaction_time
+        global total_stimuli, reaction_time, game_type
         self.stimuli = self.inst_files[self.stimuli_id]     # grabbing the first instruction
         self.stimuli_id += 1    # looping through the list of stimuli
         self.ids["stimuli"].source = os.path.join(self.inst_path + self.stimuli)    # setting the stimuli label
@@ -261,7 +260,30 @@ class NbackGame(Screen, FloatLayout):
         # print("In set inst", self.user_response)
         if self.stimuli_id >= total_stimuli:
             self.ids["stimuli"].opacity = 0
-            self.back_0_scheduler.cancel()
+            if Block_Id == 'Practice':
+                self.practice_0back_scheduler.cancel()
+            else:
+                self.back_0_scheduler.cancel()
+            self._log_and_terminate()
+
+    def generate_2back_inst(self, _):
+        self.start_time = time.time()       # Starting the timer for calculation reaction time
+
+        global total_stimuli, reaction_time, game_type
+        self.stimuli = self.inst_files[self.stimuli_id]     # grabbing the first instruction
+        self.stimuli_id += 1    # looping through the list of stimuli
+        self.ids["stimuli"].source = os.path.join(self.inst_path + self.stimuli)    # setting the stimuli label
+        self.ids["stimuli"].opacity = 1
+        self.key_stroke = ''  # Setting user key stroke to empty for every round.
+        self.curr_stimuli.append(self.stimuli)
+        self.user_response.append('')
+        reaction_time.append(0)
+        if self.stimuli_id >= total_stimuli:
+            self.ids["stimuli"].opacity = 0
+            if Block_Id == 'Practice':
+                self.practice_2back_scheduler.cancel()
+            else:
+                self.back_2_scheduler.cancel()
             self._log_and_terminate()
 
     def _keyboard_closed(self):
@@ -269,7 +291,7 @@ class NbackGame(Screen, FloatLayout):
         self._keyboard = None
 
     def _on_keyboard_down(self, keyboard, keycode, text, modifiers):
-        global reaction_time
+        global reaction_time, game_type
 
         if keycode[1] == 'spacebar':
             self.end_time = time.time()
@@ -277,6 +299,10 @@ class NbackGame(Screen, FloatLayout):
             self.user_response[self.stimuli_id-1] = keycode[1]
             self.key_stroke = keycode[1]
             # print(self.key_stroke, self.curr_stimuli)
+            if 'heart' in self.stimuli and game_type == 0:
+                self.positive_feedbeck()
+            elif 'heart' not in self.stimuli and game_type == 0:
+                self.negative_feedback()
         elif keycode[1] == 'escape':
             App.get_running_app().stop()
         else:
@@ -284,6 +310,7 @@ class NbackGame(Screen, FloatLayout):
             reaction_time[self.stimuli_id-1] = (round((self.end_time - self.start_time),4))
             self.user_response[self.stimuli_id-1] = 'wrong_key'
             self.key_stroke = keycode[1]
+            self.negative_feedback()
 
         return True
 
@@ -334,7 +361,7 @@ class NbackGame(Screen, FloatLayout):
             elif 'heart' not in item and self.user_response[idx] != 'spacebar':
                 corr_miss += 1
 
-            elif 'heart' not in item and self.user_response[idx] == 'spacebar':
+            elif 'heart' not in item and self.user_response[idx] == 'spacebar' or self.user_response[idx] == 'wrong_key':
                 incorr_press += 1
 
             elif 'heart' in item and self.user_response[idx] != 'spacebar':
@@ -347,6 +374,17 @@ class NbackGame(Screen, FloatLayout):
             incorrect_miss.append(incorr_miss)
             score.append((((corr_press+corr_miss) / total_stimuli) * 100) - (incorr_miss + incorr_press))
 
+    def _check_2back_response(self):
+        pass
+
+    # Helper functions to generate audio feedback
+    def positive_feedbeck(self):
+        sound = SoundLoader.load('../AppData/correct_sound.wav')
+        sound.play()
+
+    def negative_feedback(self):
+        sound = SoundLoader.load('../AppData/wrong_sound.wav')
+        sound.play()
 
 class NbackApp(App):
     def build(self):
