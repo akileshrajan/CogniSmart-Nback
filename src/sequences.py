@@ -1,3 +1,5 @@
+from random import randint
+
 
 def practice_0back():
     s = ['64_yellow_triangle.png', '55_red_trapezoid.png', '44_pink_heart.png', '38_magenta_octagon.png',
@@ -17,3 +19,12 @@ def practice_2back():
     r = [0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1]
 
     return s, r
+
+
+def seq_2back():
+    s, r = [], []
+    shape_type = ['circle', 'cross', 'diamond', 'heart', 'moon', 'octagon','trapezoid', 'triangle']
+    color_type = ['blue', 'brown', 'cyan', 'green', 'magenta', 'pink', 'red', 'yellow']
+
+# if __name__ == '__main__':
+#     seq_2bak_v1()

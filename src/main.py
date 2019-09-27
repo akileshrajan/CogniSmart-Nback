@@ -381,10 +381,10 @@ class NbackGame(Screen, FloatLayout):
             score.append((((corr_press+corr_miss) / total_stimuli) * 100) - (incorr_miss + incorr_press))
 
     def _check_2back_response(self):
-        global correct_press, incorrect_press, incorrect_miss, correct_miss     # final list
-        corr_press, incorr_press, corr_miss, incorr_miss = 0, 0, 0, 0
-
-        for idx, item in enumerate(self.user_response):
+        # global correct_press, incorrect_press, incorrect_miss, correct_miss     # final list
+        # corr_press, incorr_press, corr_miss, incorr_miss = 0, 0, 0, 0
+        pass
+        # for idx, item in enumerate(self.user_response):
             
 
     # Helper functions to generate audio feedback
@@ -464,5 +464,5 @@ def main(stimuli, data_path):
 
 
 if __name__ == '__main__':
-    # main('v','/media/akilesh/data/fatigue_fitbit')
-    main('v', '/Users/akileshrajavenkatanarayanan/data/')
+    main('v','/media/akilesh/data/fatigue_fitbit')
+    # main('v', '/Users/akileshrajavenkatanarayanan/data/')
