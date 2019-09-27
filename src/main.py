@@ -294,6 +294,7 @@ class NbackGame(Screen, FloatLayout):
         global reaction_time, game_type
 
         if keycode[1] == 'spacebar':
+            print(len(reaction_time), self.stimuli_id)
             self.end_time = time.time()
             reaction_time[self.stimuli_id-1] = (round((self.end_time - self.start_time),4))
             self.user_response[self.stimuli_id-1] = keycode[1]
@@ -303,6 +304,11 @@ class NbackGame(Screen, FloatLayout):
                 self.positive_feedbeck()
             elif 'heart' not in self.stimuli and game_type == 0:
                 self.negative_feedback()
+            elif game_type == 2:
+                if self.expected_resp[self.stimuli_id-1] == 1:
+                    self.positive_feedbeck()
+                elif self.expected_resp[self.stimuli_id-1] == 0:
+                    self.negative_feedback()
         elif keycode[1] == 'escape':
             App.get_running_app().stop()
         else:
@@ -375,7 +381,11 @@ class NbackGame(Screen, FloatLayout):
             score.append((((corr_press+corr_miss) / total_stimuli) * 100) - (incorr_miss + incorr_press))
 
     def _check_2back_response(self):
-        pass
+        global correct_press, incorrect_press, incorrect_miss, correct_miss     # final list
+        corr_press, incorr_press, corr_miss, incorr_miss = 0, 0, 0, 0
+
+        for idx, item in enumerate(self.user_response):
+            
 
     # Helper functions to generate audio feedback
     def positive_feedbeck(self):
