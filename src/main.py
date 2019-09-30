@@ -336,7 +336,8 @@ class NbackGame(Screen, FloatLayout):
     def _log_and_terminate(self):
         print(len(self.user_response), len(self.curr_stimuli), '\n', self.curr_stimuli, '\n', self.user_response)
 
-        global User_ID, Block_Id, game_type
+        global User_ID, Block_Id, game_type, quit
+        quit = True
         if game_type == 0:
             self._check_0back_response()    # check user's response for each round
         elif game_type == 2:
@@ -491,5 +492,5 @@ def main(stimuli, data_path):
 
 
 if __name__ == '__main__':
-    # main('v','/media/akilesh/data/fatigue_fitbit')
-    main('v', '/Users/akileshrajavenkatanarayanan/data/')
+    main('v','/media/akilesh/data/fatigue_fitbit')
+    # main('v', '/Users/akileshrajavenkatanarayanan/data/')
