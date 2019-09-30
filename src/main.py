@@ -15,7 +15,7 @@ from threading import Thread
 kivy.require('1.9.0')
 
 import MUSE_Server as mps
-from src.sequences import practice_0back, practice_2back
+from src.sequences import practice_0back, practice_2back, seq_2back
 # from .MUSE_Server import MuseServer as mps
 # import MUSE_Server as mps
 
@@ -143,6 +143,7 @@ class NbackGame(Screen, FloatLayout):
 
         self.start_time = None  # start time for each round
         self.end_time = None # end time for each round
+
         self.back_0_scheduler, self.practice_0back_scheduler = None, None  # 0-back event scheduler
         self.back_2_scheduler, self.practice_2back_scheduler = None, None  # 2_back event scheduler
 
@@ -177,6 +178,7 @@ class NbackGame(Screen, FloatLayout):
             self.ids["instruction"].opacity = 1
             Clock.schedule_once(self.generate_0back_seq, 5)
             self.inst_files = [item for item in os.listdir(self.inst_path) if re.match(self.re_pattern, item)]
+            # print(self.inst_files)
             np.random.shuffle(self.inst_files)
             total_stimuli = 64
         elif game_type == 2 and Block_Id not in 'Practice':
@@ -207,7 +209,6 @@ class NbackGame(Screen, FloatLayout):
         # Take the entire list of 64 images and show it randomly. Will have 8 targets.
         self.ids["instruction"].opacity = 0
         self.back_0_scheduler = Clock.schedule_interval(self.generate_0back_inst, 2)
-        # self.blank_scheduler = Clock.schedule_interval(self.set_blanks, 2)
 
     def generate_0back_practice(self,_):
         """
@@ -223,12 +224,15 @@ class NbackGame(Screen, FloatLayout):
         self.practice_0back_scheduler = Clock.schedule_interval(self.generate_0back_inst, 2)
 
     def generate_2back_seq(self, _):
+        global total_stimuli
         self._keyboard = Window.request_keyboard(self._keyboard_closed, self)
         self._keyboard.bind(on_key_down=self._on_keyboard_down)
 
         # Take the entire list of 64 images and show it randomly. Will have 8 targets.
         self.ids["instruction"].opacity = 0
-        self.back_2_scheduler = Clock.schedule_interval(self.generate_2back_inst, 2)
+        files_list = [item for item in os.listdir(self.inst_path) if re.match(self.re_pattern, item)]
+        self.inst_files, self.expected_resp = seq_2back(files_list, total_stimuli)
+        self.back_2_scheduler = Clock.schedule_interval(self.generate_2back_inst, 2.5)
 
     def generate_2back_practice(self,_):
         """
@@ -244,19 +248,10 @@ class NbackGame(Screen, FloatLayout):
         self.practice_2back_scheduler = Clock.schedule_interval(self.generate_2back_inst, 2)
 
     def generate_0back_inst(self, _):
+
         self.start_time = time.time()   # Starting the timer for calculation reaction time
 
         global total_stimuli, reaction_time, game_type
-        self.stimuli = self.inst_files[self.stimuli_id]     # grabbing the first instruction
-        self.stimuli_id += 1    # looping through the list of stimuli
-        self.ids["stimuli"].source = os.path.join(self.inst_path + self.stimuli)    # setting the stimuli label
-        self.ids["stimuli"].opacity = 1
-
-        self.key_stroke = ''  # Setting user key stroke to empty for every round.
-        self.curr_stimuli.append(self.stimuli)
-        self.user_response.append('')
-        reaction_time.append(0)
-
         # print("In set inst", self.user_response)
         if self.stimuli_id >= total_stimuli:
             self.ids["stimuli"].opacity = 0
@@ -265,19 +260,23 @@ class NbackGame(Screen, FloatLayout):
             else:
                 self.back_0_scheduler.cancel()
             self._log_and_terminate()
+        else:
+            self.stimuli = self.inst_files[self.stimuli_id]     # grabbing the first instruction
+            self.stimuli_id += 1    # looping through the list of stimuli
+
+        self.ids["stimuli"].source = os.path.join(self.inst_path + self.stimuli)    # setting the stimuli label
+        self.ids["stimuli"].opacity = 1
+
+        self.key_stroke = ''  # Setting user key stroke to empty for every round.
+        self.curr_stimuli.append(self.stimuli)
+        self.user_response.append('')
+        reaction_time.append(0)
 
     def generate_2back_inst(self, _):
         self.start_time = time.time()       # Starting the timer for calculation reaction time
 
         global total_stimuli, reaction_time, game_type
-        self.stimuli = self.inst_files[self.stimuli_id]     # grabbing the first instruction
-        self.stimuli_id += 1    # looping through the list of stimuli
-        self.ids["stimuli"].source = os.path.join(self.inst_path + self.stimuli)    # setting the stimuli label
-        self.ids["stimuli"].opacity = 1
-        self.key_stroke = ''  # Setting user key stroke to empty for every round.
-        self.curr_stimuli.append(self.stimuli)
-        self.user_response.append('')
-        reaction_time.append(0)
+
         if self.stimuli_id >= total_stimuli:
             self.ids["stimuli"].opacity = 0
             if Block_Id == 'Practice':
@@ -285,6 +284,20 @@ class NbackGame(Screen, FloatLayout):
             else:
                 self.back_2_scheduler.cancel()
             self._log_and_terminate()
+        else:
+            self.stimuli = self.inst_files[self.stimuli_id]     # grabbing the first instruction
+            self.stimuli_id += 1    # looping through the list of stimuli
+
+        self.ids["stimuli"].source = os.path.join(self.inst_path + self.stimuli)    # setting the stimuli label
+        self.ids["stimuli"].opacity = 1
+        self.key_stroke = ''  # Setting user key stroke to empty for every round.
+        self.curr_stimuli.append(self.stimuli)
+        self.user_response.append('')
+        reaction_time.append(0)
+
+    def set_blanks(self, _):
+        self.ids["stimuli"].source = os.path.join(self.inst_path + 'blank.png')    # setting the stimuli label
+        self.ids["stimuli"].opacity = 1
 
     def _keyboard_closed(self):
         self._keyboard.unbind(on_key_down=self._on_keyboard_down)
@@ -332,14 +345,11 @@ class NbackGame(Screen, FloatLayout):
         global total_stimuli
         global correct_press, incorrect_press, incorrect_miss, correct_miss, score, reaction_time
 
-        # print('\n', 'correct press:', correct_press, '\n', 'correct miss:', correct_miss,
-        #       '\n', 'incorrect press:', incorrect_press, '\n', 'incorrect miss:', '\n', incorrect_miss, '\n',
-        #       'Score:',score,'reaction time:', reaction_time)
-
         # convert the numpy arrays into a data frame and save it to a file
         final_data = pd.DataFrame()
-        final_data['User Resp'] = self.user_response
         final_data['Stimuli'] = self.curr_stimuli
+        final_data['User Resp'] = self.user_response
+        final_data['Expected Resp'] = self.expected_resp
         final_data['Total corr press'] = correct_press
         final_data['Total incor press'] = incorrect_press
         final_data['Total corr miss'] = correct_miss
@@ -378,14 +388,30 @@ class NbackGame(Screen, FloatLayout):
             correct_miss.append(corr_miss)
             incorrect_press.append(incorr_press)
             incorrect_miss.append(incorr_miss)
-            score.append((((corr_press+corr_miss) / total_stimuli) * 100) - (incorr_miss + incorr_press))
+            # Score is calculated as the difference between the total correct percent and total wrong percent.
+            score.append((((corr_press+corr_miss) / total_stimuli) * 100) - (((incorr_miss + incorr_press)/total_stimuli)*100))
 
     def _check_2back_response(self):
-        # global correct_press, incorrect_press, incorrect_miss, correct_miss     # final list
-        # corr_press, incorr_press, corr_miss, incorr_miss = 0, 0, 0, 0
-        pass
-        # for idx, item in enumerate(self.user_response):
-            
+        global correct_press, incorrect_press, incorrect_miss, correct_miss     # final list
+        corr_press, incorr_press, corr_miss, incorr_miss = 0, 0, 0, 0
+
+        for idx, item in enumerate(self.user_response):
+            if self.user_response[idx] == 'spacebar' and self.expected_resp[idx] == 1:
+                corr_press += 1
+            elif self.user_response[idx] != 'spacebar' and self.expected_resp[idx] == 0:
+                corr_miss += 1
+            elif self.user_response[idx] == 'spacebar' or self.user_response[idx] == 'wrong_key' and self.expected_resp[idx] ==0:
+                incorr_press += 1
+            elif self.user_response[idx] != 'spacebar' and self.expected_resp[idx] == 1:
+                incorr_miss += 1
+
+            # Append data into the final list
+            correct_press.append(corr_press)
+            correct_miss.append(corr_miss)
+            incorrect_press.append(incorr_press)
+            incorrect_miss.append(incorr_miss)
+            # Score is calculated as the difference between the total correct percent and total wrong percent.
+            score.append((((corr_press+corr_miss) / total_stimuli) * 100) - (((incorr_miss + incorr_press)/total_stimuli)*100))
 
     # Helper functions to generate audio feedback
     def positive_feedbeck(self):
@@ -395,6 +421,7 @@ class NbackGame(Screen, FloatLayout):
     def negative_feedback(self):
         sound = SoundLoader.load('../AppData/wrong_sound.wav')
         sound.play()
+
 
 class NbackApp(App):
     def build(self):
@@ -464,5 +491,5 @@ def main(stimuli, data_path):
 
 
 if __name__ == '__main__':
-    main('v','/media/akilesh/data/fatigue_fitbit')
-    # main('v', '/Users/akileshrajavenkatanarayanan/data/')
+    # main('v','/media/akilesh/data/fatigue_fitbit')
+    main('v', '/Users/akileshrajavenkatanarayanan/data/')
