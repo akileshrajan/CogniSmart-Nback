@@ -2,7 +2,8 @@ import kivy
 from kivy.app import App
 from kivy.uix.floatlayout import FloatLayout
 from kivy.lang import Builder
-from kivy.core.audio import SoundLoader
+# from kivy.core.audio import SoundLoader
+import simpleaudio as sa
 from kivy.clock import Clock
 from kivy.uix.screenmanager import ScreenManager, Screen, SlideTransition
 from kivy.config import Config
@@ -25,18 +26,16 @@ Clock.max_iteration = 70
 
 
 def readMuse(path):
-    global server, round_set, user_id, round_id, quit
+    # global server, round_set, user_id, round_id, quit
+    global server, quit, User_ID, Block_Id, game_type
     intro = open('test', 'w')
     server = mps.initialize(intro)
     server.start()
     round_id = None
-    prev_round = round_id
+    eeg_name = os.path.join(path, str(User_ID) + "_" + str(Block_Id) + "_" + str(game_type))
+    out_file = open(eeg_name, 'w')
+    server.f = out_file
     while (True):
-        if round_id != prev_round:
-            eeg_name = ('/').join((path, str(round_set) + "_" + str(round_id)))
-            out = open(eeg_name, 'w')
-            server.f = out
-            prev_round = round_id
         if quit:
             server.stop()
             break
@@ -97,7 +96,7 @@ class NbackMain(Screen, FloatLayout):
         # global timer
         # timer = Clock.schedule_interval(game.timercallback, 1)
         # Create path to store images if not there
-        global User_ID, store_data_path, Block_Id
+        global User_ID, store_data_path, Block_Id,game_type
         user_folder_name = "user_" + str(User_ID)
         # self.path_usr = os.path.join(store_data_path,user_folder_name)
         user_folder = os.path.join(store_data_path,user_folder_name)
@@ -122,6 +121,15 @@ class NbackMain(Screen, FloatLayout):
             os.makedirs(self.path_eeg)
             self.path_eeg = os.path.abspath(self.path_eeg)
 
+        if game_type != 'Practice':
+            # thread2 = Thread(target=readFrames, args=(self.path_im,))
+            # thread2.start()
+
+            thread3 = Thread(target=readMuse, args=(self.path_eeg,))
+            thread3.start()
+
+            # thread2.join()
+            # thread3.join()
         self.manager.transition = SlideTransition(direction="left")
         self.manager.current = 'game_screen'
         self.manager.get_screen('game_screen').start_game()
@@ -307,7 +315,7 @@ class NbackGame(Screen, FloatLayout):
         global reaction_time, game_type
 
         if keycode[1] == 'spacebar':
-            print(len(reaction_time), self.stimuli_id)
+            # print(len(reaction_time), self.stimuli_id)
             self.end_time = time.time()
             reaction_time[self.stimuli_id-1] = (round((self.end_time - self.start_time),4))
             self.user_response[self.stimuli_id-1] = keycode[1]
@@ -334,7 +342,7 @@ class NbackGame(Screen, FloatLayout):
         return True
 
     def _log_and_terminate(self):
-        print(len(self.user_response), len(self.curr_stimuli), '\n', self.curr_stimuli, '\n', self.user_response)
+        # print(len(self.user_response), len(self.curr_stimuli), '\n', self.curr_stimuli, '\n', self.user_response)
 
         global User_ID, Block_Id, game_type, quit
         quit = True
@@ -345,12 +353,11 @@ class NbackGame(Screen, FloatLayout):
 
         global total_stimuli
         global correct_press, incorrect_press, incorrect_miss, correct_miss, score, reaction_time
-
+        # print(len(self.curr_stimuli),len(self.expected_resp))
         # convert the numpy arrays into a data frame and save it to a file
         final_data = pd.DataFrame()
         final_data['Stimuli'] = self.curr_stimuli
         final_data['User Resp'] = self.user_response
-        final_data['Expected Resp'] = self.expected_resp
         final_data['Total corr press'] = correct_press
         final_data['Total incor press'] = incorrect_press
         final_data['Total corr miss'] = correct_miss
@@ -416,12 +423,18 @@ class NbackGame(Screen, FloatLayout):
 
     # Helper functions to generate audio feedback
     def positive_feedbeck(self):
-        sound = SoundLoader.load('../AppData/correct_sound.wav')
-        sound.play()
+        # sound = SoundLoader.load('../AppData/correct_sound.wav')
+        # sound = SoundLoader.load('../AppData/correct_sound.ogg')
+        sound = sa.WaveObject.from_wave_file('../AppData/correct_sound.wav')
+        play_obj = sound.play()
+        play_obj.wait_done()
 
     def negative_feedback(self):
-        sound = SoundLoader.load('../AppData/wrong_sound.wav')
-        sound.play()
+        # sound = SoundLoader.load('../AppData/wrong_sound.wav')
+        # sound = SoundLoader.load('../AppData/wrong_sound.ogg')
+        sound = sa.WaveObject.from_wave_file('../AppData/wrong_sound.wav')
+        play_obj = sound.play()
+        play_obj.wait_done()
 
 
 class NbackApp(App):
