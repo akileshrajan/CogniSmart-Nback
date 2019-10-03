@@ -1,9 +1,10 @@
+from __future__ import print_function
 import kivy
 from kivy.app import App
 from kivy.uix.floatlayout import FloatLayout
 from kivy.lang import Builder
-# from kivy.core.audio import SoundLoader
-import simpleaudio as sa
+from kivy.core.audio import SoundLoader
+# import simpleaudio as sa
 from kivy.clock import Clock
 from kivy.uix.screenmanager import ScreenManager, Screen, SlideTransition
 from kivy.config import Config
@@ -12,11 +13,14 @@ import numpy as np
 import pandas as pd
 import cv2, sys, os, datetime, re, time
 from threading import Thread
+import signal
 
 kivy.require('1.9.0')
 
-import MUSE_Server as mps
-from src.sequences import practice_0back, practice_2back, seq_2back
+import Sensorshandler as sensors
+from sequences import practice_0back, practice_2back, seq_2back
+
+
 # from .MUSE_Server import MuseServer as mps
 # import MUSE_Server as mps
 
@@ -24,53 +28,59 @@ from src.sequences import practice_0back, practice_2back, seq_2back
 Builder.load_file("main.kv")
 Clock.max_iteration = 70
 
+class bcolors:
+    ENDC = '\033[0m'
 
-def readMuse(path):
-    # global server, round_set, user_id, round_id, quit
-    global server, quit, User_ID, Block_Id, game_type
-    intro = open('test', 'w')
-    server = mps.initialize(intro)
-    server.start()
-    round_id = None
-    eeg_name = os.path.join(path, str(User_ID) + "_" + str(Block_Id) + "_" + str(game_type))
-    out_file = open(eeg_name, 'w')
-    server.f = out_file
-    while (True):
-        if quit:
-            server.stop()
-            break
+    ERROR = '\033[1;31m'
+    WARNING = '\033[30;41m'
+
+    PLUX = '\033[36m'
 
 
-def readFrames(path):
-    global round_set, User_ID, round_id, quit, modality, store_data_path
-    frameCounter = 1
-    cap = cv2.VideoCapture(0)
-    frame_struct = []
-
-    while (True):
-        ret, frame = cap.read()
-        if frameCounter % 10 == 0:
-            # cv2.imshow('frame',frame)
-            if round_set > len(frame_struct) - 1:
-                frame_struct.append([])
-            frame_struct[round_set].append(frame)
-            fname = str(round_set) + "_" + str(round_id) + "_" + str(frameCounter) + "_" + str(
-                datetime.datetime.time(datetime.datetime.now())) + ".jpg"
-            cv2.imwrite(os.path.join(path, fname), frame)
-        frameCounter += 1
-
-        if quit:
-            filename = store_data_path + "/images/user_" + User_ID + '_' + modality + "/data"
-            np.save(filename, frame_struct)
-            break
-
-    # When everything done, release the capture
-    cap.release()
-    sys.exit()
-    # cv2.destroyAllWindows()
+# def readMuse(path):
+#     # global server, round_set, user_id, round_id, quit
+#     global server, quit, User_ID, Block_Id, game_type
+#     intro = open('test', 'w')
+#     server = mps.initialize(intro)
+#     server.start()
+#
+#     while (True):
+#         eeg_name = os.path.join(path, str(User_ID) + "_" + str(Block_Id) + "_" + str(game_type))
+#         out_file = open(eeg_name, 'w')
+#         server.f = out_file
+#
+#         if quit:
+#             server.stop()
+#             out_file.close()
+#             break
 
 
-# class KeyboardListner
+# def readFrames(path):
+#     global quit, User_ID, Block_Id, game_type
+#
+#     frameCounter = 1
+#     cap = cv2.VideoCapture(0)
+#     frame_struct = []
+#
+#     while True:
+#         ret, frame = cap.read()
+#         file_name = os.path.join(path, str(User_ID)+'_'+str(Block_Id)+'_'+str(game_type)+'_'+str(frameCounter)
+#                                  +'_'+str(datetime.datetime.time(datetime.datetime.now())) + '.jpg')
+#         cv2.imwrite(file_name, frame)
+#         frameCounter += 1
+#
+#         if quit:
+#             cap.release()
+#             # filename = store_data_path + "/images/user_" + User_ID + '_' + modality + "/data"
+#             # np.save(filename, frame_struct)
+#             break
+#
+#     # When everything done, release the capture
+#     # cap.release()
+#     sys.exit()
+#     # cv2.destroyAllWindows()
+
+
 # Initialize variables
 class NbackMain(Screen, FloatLayout):
     def __init__(self, **kw):
@@ -78,6 +88,11 @@ class NbackMain(Screen, FloatLayout):
         self.path_usr = None
         self.path_eeg = None
         self.path_im = None
+        self.path_bsp = None
+
+        self.muse_thread = None
+        self.cam_thread = None
+        self.bsp_thread = None
 
     def on_text_change(self, usr_id):
         global User_ID
@@ -92,9 +107,6 @@ class NbackMain(Screen, FloatLayout):
         game_type = int(g_type)
 
     def start_game(self):
-        # game = nbackGame()
-        # global timer
-        # timer = Clock.schedule_interval(game.timercallback, 1)
         # Create path to store images if not there
         global User_ID, store_data_path, Block_Id,game_type
         user_folder_name = "user_" + str(User_ID)
@@ -110,26 +122,27 @@ class NbackMain(Screen, FloatLayout):
             os.mkdir(self.path_usr)
             self.path_usr = os.path.abspath(self.path_usr)
 
-        self.path_im = os.path.join(self.path_usr, 'images')
-        if not os.path.exists(self.path_im):
-            os.makedirs(self.path_im)
-            self.path_im = os.path.abspath(self.path_im)
+        # # Start each sensor in a separate thread. No sensor recording for practice block.
+        # if Block_Id != 'Practice':
+        #     self.bsp_thread = sensors.SensorsHandler("Plux", self.path_usr,User_ID, Block_Id, game_type)
+        #     self.bsp_thread.start()
+        #     self.bsp_thread.start_sensor()      # Start recording BSP
+        #     # print ("plux Started")
+        #
+        #     self.cam_thread = sensors.SensorsHandler("Camera", self.path_usr,User_ID, Block_Id, game_type)
+        #     # print("Cam thread created")
+        #     self.cam_thread.start()
+        #     # print("thread started")
+        #     self.cam_thread.start_sensor()
+        #     # print("cam sensor started")
+        #
+        #     self.muse_thread = sensors.SensorsHandler("Muse", self.path_usr,User_ID, Block_Id, game_type)
+        #     # print("Muse Started 1")
+        #     self.muse_thread.start()
+        #     # print("Muse Started 2")
+        #     self.muse_thread.start_sensor()     # Start recording Muse
+        #     # print("Muse Started 3")
 
-        # Create path to store eeg if not there
-        self.path_eeg = os.path.join(self.path_usr, 'eeg')
-        if not os.path.exists(self.path_eeg):
-            os.makedirs(self.path_eeg)
-            self.path_eeg = os.path.abspath(self.path_eeg)
-
-        if game_type != 'Practice':
-            # thread2 = Thread(target=readFrames, args=(self.path_im,))
-            # thread2.start()
-
-            thread3 = Thread(target=readMuse, args=(self.path_eeg,))
-            thread3.start()
-
-            # thread2.join()
-            # thread3.join()
         self.manager.transition = SlideTransition(direction="left")
         self.manager.current = 'game_screen'
         self.manager.get_screen('game_screen').start_game()
@@ -188,7 +201,7 @@ class NbackGame(Screen, FloatLayout):
             self.inst_files = [item for item in os.listdir(self.inst_path) if re.match(self.re_pattern, item)]
             # print(self.inst_files)
             np.random.shuffle(self.inst_files)
-            total_stimuli = 64
+            total_stimuli = 6
         elif game_type == 2 and Block_Id not in 'Practice':
             self.ids["instruction"].source = "../AppData/Nback_visual/inst_2-back.png"
             self.ids["instruction"].opacity = 1
@@ -331,6 +344,9 @@ class NbackGame(Screen, FloatLayout):
                 elif self.expected_resp[self.stimuli_id-1] == 0:
                     self.negative_feedback()
         elif keycode[1] == 'escape':
+            self.manager.get_screen('main_screen').bsp_thread.close_sensor()
+            self.manager.get_screen('main_screen').muse_thread.close_sensor()
+            self.manager.get_screen('main_screen').cam_thread.close_sensor()
             App.get_running_app().stop()
         else:
             self.end_time = time.time()
@@ -345,7 +361,12 @@ class NbackGame(Screen, FloatLayout):
         # print(len(self.user_response), len(self.curr_stimuli), '\n', self.curr_stimuli, '\n', self.user_response)
 
         global User_ID, Block_Id, game_type, quit
-        quit = True
+
+        # Stop recording data from sensors.
+        # self.manager.get_screen('main_screen').bsp_thread.close_sensor()
+        # self.manager.get_screen('main_screen').muse_thread.close_sensor()
+        # self.manager.get_screen('main_screen').cam_thread.close_sensor()
+        # self.manager.get_screen('main_screen').cam_thread.quit = True
         if game_type == 0:
             self._check_0back_response()    # check user's response for each round
         elif game_type == 2:
@@ -376,16 +397,18 @@ class NbackGame(Screen, FloatLayout):
         App.get_running_app().stop()
 
     def _check_0back_response(self):
-        global correct_press, incorrect_press, incorrect_miss, correct_miss     # final list
+        global total_stimuli
+        global correct_press, incorrect_press, incorrect_miss, correct_miss, score, reaction_time # final list
         corr_press, incorr_press, corr_miss, incorr_miss = 0, 0, 0, 0
 
         for idx, item in enumerate(self.curr_stimuli):
             if 'heart' in item and self.user_response[idx] == 'spacebar':
-                corr_press +=1
+                corr_press += 1
             elif 'heart' not in item and self.user_response[idx] != 'spacebar':
                 corr_miss += 1
 
-            elif 'heart' not in item and self.user_response[idx] == 'spacebar' or self.user_response[idx] == 'wrong_key':
+            elif 'heart' not in item and self.user_response[idx] == 'spacebar' or self.user_response[
+                idx] == 'wrong_key':
                 incorr_press += 1
 
             elif 'heart' in item and self.user_response[idx] != 'spacebar':
@@ -397,10 +420,16 @@ class NbackGame(Screen, FloatLayout):
             incorrect_press.append(incorr_press)
             incorrect_miss.append(incorr_miss)
             # Score is calculated as the difference between the total correct percent and total wrong percent.
-            score.append((((corr_press+corr_miss) / total_stimuli) * 100) - (((incorr_miss + incorr_press)/total_stimuli)*100))
+            # score.append((((corr_press + corr_miss) / total_stimuli) * 100) - (
+            #             ((incorr_miss + incorr_press) / total_stimuli) * 100))
+            s = np.divide((corr_press+corr_miss),total_stimuli) - np.divide((incorr_press+incorr_miss),total_stimuli)
+            score.append(s)
+            print(score,'\n')
+            print(corr_press, corr_miss, incorr_press,  incorr_miss)
 
     def _check_2back_response(self):
-        global correct_press, incorrect_press, incorrect_miss, correct_miss     # final list
+        global total_stimuli
+        global correct_press, incorrect_press, incorrect_miss, correct_miss, score, reaction_time    # final list
         corr_press, incorr_press, corr_miss, incorr_miss = 0, 0, 0, 0
 
         for idx, item in enumerate(self.user_response):
@@ -419,22 +448,25 @@ class NbackGame(Screen, FloatLayout):
             incorrect_press.append(incorr_press)
             incorrect_miss.append(incorr_miss)
             # Score is calculated as the difference between the total correct percent and total wrong percent.
-            score.append((((corr_press+corr_miss) / total_stimuli) * 100) - (((incorr_miss + incorr_press)/total_stimuli)*100))
+            score.append((((corr_press+corr_miss) / total_stimuli) * 100) -
+                         (((incorr_miss + incorr_press)/total_stimuli)*100))
 
     # Helper functions to generate audio feedback
     def positive_feedbeck(self):
-        # sound = SoundLoader.load('../AppData/correct_sound.wav')
+        sound = SoundLoader.load('../AppData/correct_sound.wav')
         # sound = SoundLoader.load('../AppData/correct_sound.ogg')
-        sound = sa.WaveObject.from_wave_file('../AppData/correct_sound.wav')
-        play_obj = sound.play()
-        play_obj.wait_done()
+        # sound = sa.WaveObject.from_wave_file('../AppData/correct_sound.wav')
+        # play_obj = sound.play()
+        # play_obj.wait_done()
+        sound.play()
 
     def negative_feedback(self):
-        # sound = SoundLoader.load('../AppData/wrong_sound.wav')
+        sound = SoundLoader.load('../AppData/wrong_sound.wav')
         # sound = SoundLoader.load('../AppData/wrong_sound.ogg')
-        sound = sa.WaveObject.from_wave_file('../AppData/wrong_sound.wav')
-        play_obj = sound.play()
-        play_obj.wait_done()
+        # sound = sa.WaveObject.from_wave_file('../AppData/wrong_sound.wav')
+        # play_obj = sound.play()
+        # play_obj.wait_done()
+        sound.play()
 
 
 class NbackApp(App):
@@ -490,18 +522,8 @@ def main(stimuli, data_path):
     # User_ID = str(user_id)
 
     # Run game and recording into threads
-    thread1 = Thread(target=NbackApp().run())
-    thread1.start()
-
-    # thread2 = Thread(target=readFrames, args=(path_im,))
-    # thread2.start()
-    #
-    # thread3 = Thread(target=readMuse, args=(path_eeg,))
-    # thread3.start()
-
-    thread1.join()
-    # thread2.join()
-    # thread3.join()
+    nback_thread = Thread(target=NbackApp().run())
+    nback_thread.start()
 
 
 if __name__ == '__main__':
