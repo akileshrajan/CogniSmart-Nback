@@ -1,4 +1,4 @@
-from __future__ import print_function
+from __future__ import print_function, division
 import kivy
 from kivy.app import App
 from kivy.uix.floatlayout import FloatLayout
@@ -122,26 +122,19 @@ class NbackMain(Screen, FloatLayout):
             os.mkdir(self.path_usr)
             self.path_usr = os.path.abspath(self.path_usr)
 
-        # # Start each sensor in a separate thread. No sensor recording for practice block.
-        # if Block_Id != 'Practice':
-        #     self.bsp_thread = sensors.SensorsHandler("Plux", self.path_usr,User_ID, Block_Id, game_type)
-        #     self.bsp_thread.start()
-        #     self.bsp_thread.start_sensor()      # Start recording BSP
-        #     # print ("plux Started")
-        #
-        #     self.cam_thread = sensors.SensorsHandler("Camera", self.path_usr,User_ID, Block_Id, game_type)
-        #     # print("Cam thread created")
-        #     self.cam_thread.start()
-        #     # print("thread started")
-        #     self.cam_thread.start_sensor()
-        #     # print("cam sensor started")
-        #
-        #     self.muse_thread = sensors.SensorsHandler("Muse", self.path_usr,User_ID, Block_Id, game_type)
-        #     # print("Muse Started 1")
-        #     self.muse_thread.start()
-        #     # print("Muse Started 2")
-        #     self.muse_thread.start_sensor()     # Start recording Muse
-        #     # print("Muse Started 3")
+        # Start each sensor in a separate thread. No sensor recording for practice block.
+        if Block_Id != 'Practice':
+            self.bsp_thread = sensors.SensorsHandler("Plux", self.path_usr,User_ID, Block_Id, game_type)
+            self.bsp_thread.start()
+            self.bsp_thread.start_sensor()      # Start recording BSP
+
+            self.cam_thread = sensors.SensorsHandler("Camera", self.path_usr,User_ID, Block_Id, game_type)
+            self.cam_thread.start()
+            self.cam_thread.start_sensor()
+
+            self.muse_thread = sensors.SensorsHandler("Muse", self.path_usr,User_ID, Block_Id, game_type)
+            self.muse_thread.start()
+            self.muse_thread.start_sensor()     # Start recording Muse
 
         self.manager.transition = SlideTransition(direction="left")
         self.manager.current = 'game_screen'
@@ -201,7 +194,7 @@ class NbackGame(Screen, FloatLayout):
             self.inst_files = [item for item in os.listdir(self.inst_path) if re.match(self.re_pattern, item)]
             # print(self.inst_files)
             np.random.shuffle(self.inst_files)
-            total_stimuli = 6
+            total_stimuli = 64
         elif game_type == 2 and Block_Id not in 'Practice':
             self.ids["instruction"].source = "../AppData/Nback_visual/inst_2-back.png"
             self.ids["instruction"].opacity = 1
@@ -361,11 +354,11 @@ class NbackGame(Screen, FloatLayout):
         # print(len(self.user_response), len(self.curr_stimuli), '\n', self.curr_stimuli, '\n', self.user_response)
 
         global User_ID, Block_Id, game_type, quit
-
         # Stop recording data from sensors.
-        # self.manager.get_screen('main_screen').bsp_thread.close_sensor()
-        # self.manager.get_screen('main_screen').muse_thread.close_sensor()
-        # self.manager.get_screen('main_screen').cam_thread.close_sensor()
+        if Block_Id != "Practice":
+            self.manager.get_screen('main_screen').bsp_thread.close_sensor()
+            self.manager.get_screen('main_screen').muse_thread.close_sensor()
+            self.manager.get_screen('main_screen').cam_thread.close_sensor()
         # self.manager.get_screen('main_screen').cam_thread.quit = True
         if game_type == 0:
             self._check_0back_response()    # check user's response for each round
@@ -420,12 +413,8 @@ class NbackGame(Screen, FloatLayout):
             incorrect_press.append(incorr_press)
             incorrect_miss.append(incorr_miss)
             # Score is calculated as the difference between the total correct percent and total wrong percent.
-            # score.append((((corr_press + corr_miss) / total_stimuli) * 100) - (
-            #             ((incorr_miss + incorr_press) / total_stimuli) * 100))
-            s = np.divide((corr_press+corr_miss),total_stimuli) - np.divide((incorr_press+incorr_miss),total_stimuli)
-            score.append(s)
-            print(score,'\n')
-            print(corr_press, corr_miss, incorr_press,  incorr_miss)
+            score.append((((corr_press + corr_miss) / total_stimuli) * 100) - (
+                        ((incorr_miss + incorr_press) / total_stimuli) * 100))
 
     def _check_2back_response(self):
         global total_stimuli
