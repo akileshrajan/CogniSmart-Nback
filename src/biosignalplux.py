@@ -102,7 +102,10 @@ def PluxDataFile(path, user_id, block_id, game_type):
 
     try:
         # current_time = datetime.datetime.now().strftime('%Y-%m-%d__%H.%M.%S.%f')
-        _filename = "%s/Plux-%s_%s_%s.csv" % (path, str(user_id),str(block_id),str(game_type))
+        if block_id == "Baseline":
+            _filename = "%s/Plux-%s_%s.csv" % (path, str(user_id),str(block_id))
+        else:
+            _filename = "%s/Plux-%s_%s_%s.csv" % (path, str(user_id),str(block_id),str(game_type))
 
         if plux_file is not None:
             plux_file.close()

@@ -10,7 +10,7 @@ quit = False
 
 
 class SensorsHandler(threading.Thread):
-    def __init__(self, thread_name, path,user_id, block_id, game_type):
+    def __init__(self, thread_name, path,user_id, block_id, game_type=0):
         threading.Thread.__init__(self)
         self.name = thread_name
         self.save_path = path
@@ -115,9 +115,15 @@ def read_camera(path,user_id, block_id, game_type):
 
     while True:
         ret, frame = cap.read()
-        file_name = os.path.join(path,
-                                 str(user_id) + '_' + str(block_id) + '_' + str(game_type) + '_' + str(frameCounter)
-                                 + '_' + str(datetime.datetime.time(datetime.datetime.now())) + '.jpg')
+        if block_id == "Baseline":
+            file_name = os.path.join(path,
+                                     str(user_id) + '_' + str(block_id) + '_' + str(frameCounter)
+                                     + '_' + str(datetime.datetime.time(datetime.datetime.now())) + '.jpg')
+        else:
+            file_name = os.path.join(path,
+                                     str(user_id) + '_' + str(block_id) + '_' + str(game_type) + '_' + str(frameCounter)
+                                     + '_' + str(datetime.datetime.time(datetime.datetime.now())) + '.jpg')
+
         cv2.imwrite(file_name, frame)
         # print("## frame write")
         frameCounter += 1
@@ -140,7 +146,10 @@ def read_muse(path,user_id, block_id, game_type):
     server.start()
 
     while True:
-        eeg_name = os.path.join(path, str(user_id) + "_" + str(block_id) + "_" + str(game_type))
+        if block_id == "Baseline":
+            eeg_name = os.path.join(path, str(user_id) + "_" + str(block_id))
+        else:
+            eeg_name = os.path.join(path, str(user_id) + "_" + str(block_id) + "_" + str(game_type))
         out_file = open(eeg_name, 'a')
         # print(server.f)
         server.f = out_file

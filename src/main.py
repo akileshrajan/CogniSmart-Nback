@@ -259,7 +259,7 @@ class NbackGame(Screen, FloatLayout):
         self._keyboard.bind(on_key_down=self._on_keyboard_down)
         self.ids["instruction"].opacity = 0
         self.inst_files, self.expected_resp = practice_2back()
-        self.practice_2back_scheduler = Clock.schedule_interval(self.generate_2back_inst, 2)
+        self.practice_2back_scheduler = Clock.schedule_interval(self.generate_2back_inst, 2.5)
 
     def generate_0back_inst(self, _):
 
