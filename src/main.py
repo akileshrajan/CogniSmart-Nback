@@ -506,6 +506,7 @@ def main(stimuli, data_path):
 
     # Block_Id = block_id
     quit = False
+    quit = False
     timer_val = 5
     stimuli_type = stimuli
     # User_ID = str(user_id)
