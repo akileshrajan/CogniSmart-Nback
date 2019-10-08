@@ -106,9 +106,13 @@ class NbackMain(Screen, FloatLayout):
         global game_type
         game_type = int(g_type)
 
+    def on_sessionid_change(self, s_type):
+        global session_id
+        session_id = s_type
+
     def start_game(self):
         # Create path to store images if not there
-        global User_ID, store_data_path, Block_Id,game_type
+        global User_ID, store_data_path, Block_Id,game_type, session_id
         user_folder_name = "user_" + str(User_ID)
         # self.path_usr = os.path.join(store_data_path,user_folder_name)
         user_folder = os.path.join(store_data_path,user_folder_name)
@@ -116,8 +120,14 @@ class NbackMain(Screen, FloatLayout):
             os.mkdir(user_folder)
             user_folder = os.path.abspath(user_folder)
 
+        user_session_name = "session_"+str(session_id)
+        user_session_folder = os.path.join(user_folder,user_session_name)
+        if not os.path.exists(user_session_folder):
+            os.mkdir(user_session_folder)
+            user_session_folder = os.path.abspath(user_session_folder)
+
         block_folder_name = 'block'+str(Block_Id)
-        self.path_usr = os.path.join(user_folder, block_folder_name)
+        self.path_usr = os.path.join(user_session_folder, block_folder_name)
         if not os.path.exists(self.path_usr):
             os.mkdir(self.path_usr)
             self.path_usr = os.path.abspath(self.path_usr)
@@ -497,8 +507,8 @@ def main(stimuli, data_path):
     global reaction_time  # Reaction time for each stimuli
     reaction_time = []
 
-    Config.set('graphics', 'width', str(1500))
-    Config.set('graphics', 'height', str(1000))
+    Config.set('graphics', 'width', str(2500))
+    Config.set('graphics', 'height', str(2000))
 
     # Parameter initialization
     store_data_path = data_path

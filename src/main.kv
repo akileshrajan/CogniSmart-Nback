@@ -27,6 +27,14 @@
                     on_text: root.on_text_change(self.text)
 
                 Spinner:
+                    id: sess_id
+                    text: 'Session ID'
+                    values: '1', '2'
+                    font_size: 50
+                    background_color: 0,0,1,1
+                    on_text: root.on_sessionid_change(self.text)
+
+                Spinner:
                     id: blk_id
                     text: 'Block ID'
                     values: '1', '2', '3', '4', 'Practice'
