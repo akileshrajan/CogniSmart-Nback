@@ -29,10 +29,11 @@ the keyboard when they think they saw the symbol.
 4. BioSignal Plux - ECG sensor.
 
 ### Dependencies
-1. Kivy Python Cross-Platform Gui library 1.9.0 or newer
-2. Install Python SDK Tools: http://das.nasophon.de/pyliblo/ 
-3. Install OpenCV 3.0.0
-4. Install Numpy, Pandas
+1. Python 2.7.x
+2. Kivy Python Cross-Platform Gui library 1.9.0 or newer
+3. Install Python SDK Tools: http://das.nasophon.de/pyliblo/ 
+4. Install OpenCV 3.0.0
+5. Install Numpy, Pandas
 
 Note: Since we use 64-bit Linux OS, check the following link for MuseSDK on 64-bit system: http://forum.choosemuse.com/t/issues-running-muselab-and-muse-io/112/20 or https://github.com/elnn/tomato/blob/master/README.md
 
